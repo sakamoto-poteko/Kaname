@@ -11,10 +11,19 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Kaname
 TEMPLATE = app
 
+CONFIG += c++11
 
-SOURCES += main.cpp\
-        Kaname.cpp
+INCLUDEPATH += include
 
-HEADERS  += Kaname.h
+SOURCES += src/main.cpp\
+        src/Kaname.cpp \
+    src/AbstractImageSource.cpp \
+    src/StillImageSource.cpp \
+    src/ImageSourceCacheMgr.cpp
+
+HEADERS  += include/Kaname.h \
+    include/AbstractImageSource.h \
+    include/StillImageSource.h \
+    include/ImageSourceCacheMgr.h
 
 FORMS    += Kaname.ui
