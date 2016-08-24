@@ -27,3 +27,4 @@ HEADERS  += include/Kaname.h \
     include/ImageSourceCacheMgr.h
 
 FORMS    += Kaname.ui
+

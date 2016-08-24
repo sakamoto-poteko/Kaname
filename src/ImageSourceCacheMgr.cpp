@@ -17,7 +17,7 @@
  ************************************************************************/
 
 
-#include "include/ImageSourceCacheMgr.h"
+#include "ImageSourceCacheMgr.h"
 
 ImageSourceCacheMgr::ImageSourceCacheMgr(ssize_t cacheSize) :
     _cacheSize(cacheSize)
