@@ -16,25 +16,35 @@
  *
  ***************************************************************************/
 
-#ifndef KANAME_H
-#define KANAME_H
+#ifndef ABSTRACTIMAGESOURCE_H
+#define ABSTRACTIMAGESOURCE_H
 
-#include <QMainWindow>
+#include <QObject>
+#include <QImage>
 
-namespace Ui {
-class Kaname;
-}
-
-class Kaname : public QMainWindow
+class AbstractImageSource : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit Kaname(QWidget *parent = 0);
-    ~Kaname();
+    AbstractImageSource();
+    virtual ~AbstractImageSource();
+    virtual int  sourceCount() = 0;
+    virtual QImage getImage() = 0;
+    virtual QString getImageName() = 0;
 
-private:
-    Ui::Kaname *ui;
+public slots:
+    virtual void addSource(QString source) = 0;
+    virtual void addSources(QStringList sources) = 0;
+    virtual void clearSources() = 0;
+    virtual void load() = 0;
+    virtual bool moveNext() = 0;
+    virtual bool movePrevious() = 0;
+    virtual bool moveBegin() = 0;
+    virtual bool moveEnd() = 0;
+
+signals:
+    void sourceChanged(QStringList sources);
+    void sourceStatusChanged(bool loaded);
 };
 
-#endif // KANAME_H
+#endif // ABSTRACTIMAGESOURCE_H

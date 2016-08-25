@@ -19,12 +19,19 @@ SOURCES += src/main.cpp\
         src/Kaname.cpp \
     src/AbstractImageSource.cpp \
     src/StillImageSource.cpp \
-    src/ImageSourceCacheMgr.cpp
+    src/ImageSourceCacheMgr.cpp \
+    src/MarkingWidget.cpp \
+    src/MarkingBoxManager.cpp
 
 HEADERS  += include/Kaname.h \
     include/AbstractImageSource.h \
     include/StillImageSource.h \
-    include/ImageSourceCacheMgr.h
+    include/ImageSourceCacheMgr.h \
+    include/MarkingWidget.h \
+    include/MarkingBoxManager.h
 
 FORMS    += Kaname.ui
+
+RESOURCES += \
+    resources/resources.qrc
 

@@ -16,17 +16,44 @@
  *
  ***************************************************************************/
 
-#include "Kaname.h"
-#include "ui_Kaname.h"
+#ifndef KANAME_H
+#define KANAME_H
 
-Kaname::Kaname(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::Kaname)
-{
-    ui->setupUi(this);
+#include <QMainWindow>
+#include <QLabel>
+#include <MarkingBoxManager.h>
+
+class AbstractImageSource;
+
+namespace Ui {
+class Kaname;
 }
 
-Kaname::~Kaname()
+class Kaname : public QMainWindow
 {
-    delete ui;
-}
+    Q_OBJECT
+
+public:
+    explicit Kaname(QWidget *parent = 0);
+    ~Kaname();
+
+private slots:
+    void imageLoadStatusChanged(bool loaded);
+    void markerBoxUpdated(const QVector<QRect> &boxes);
+
+    void on_action_AddImages_triggered();
+    void on_action_NextImage_triggered();
+    void on_action_PreviousImage_triggered();
+
+private:
+    Ui::Kaname *ui;
+    AbstractImageSource *_imageSource;
+    MarkingBoxManager _markingBoxMgr;
+    QLabel *_permStatusLbl;
+
+    void updatePermStatusText(const QString &status);
+    void updateTempStatusText(const QString &status, int timeout = 500);
+    void getAndRenderImage();
+};
+
+#endif // KANAME_H

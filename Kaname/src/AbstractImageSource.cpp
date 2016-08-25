@@ -16,27 +16,14 @@
  *
  ***************************************************************************/
 
-#ifndef ABSTRACTIMAGESOURCE_H
-#define ABSTRACTIMAGESOURCE_H
+#include "AbstractImageSource.h"
 
-#include <QObject>
-#include <QImage>
-
-class AbstractImageSource
+AbstractImageSource::AbstractImageSource()
 {
-public:
-    AbstractImageSource();
 
-    virtual void AddSource(QString source) = 0;
-    virtual void AddSources(QStringList sources) = 0;
-    virtual void ClearSources() = 0;
+}
 
-    virtual void load() = 0;
-    virtual bool moveNext() = 0;
-    virtual bool movePrevious() = 0;
-    virtual bool moveBegin() = 0;
-    virtual bool moveEnd() = 0;
-    virtual QImage getImage() = 0;
-};
+AbstractImageSource::~AbstractImageSource()
+{
 
-#endif // ABSTRACTIMAGESOURCE_H
+}

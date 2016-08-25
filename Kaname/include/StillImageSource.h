@@ -27,16 +27,19 @@ class StillImageSource : public AbstractImageSource
 public:
     StillImageSource();
 
-    virtual void AddSource(QString source);
-    virtual void AddSources(QStringList sources);
-    virtual void ClearSources();
+    virtual int  sourceCount();
+    virtual QImage getImage();
+    virtual QString getImageName();
 
+public slots:
+    virtual void addSource(QString source);
+    virtual void addSources(QStringList sources);
+    virtual void clearSources();
     virtual void load();
     virtual bool moveNext();
     virtual bool movePrevious();
     virtual bool moveBegin();
     virtual bool moveEnd();
-    virtual QImage getImage();
 
 protected:
     bool _loaded;

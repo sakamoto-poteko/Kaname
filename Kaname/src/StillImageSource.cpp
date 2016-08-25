@@ -24,22 +24,31 @@ StillImageSource::StillImageSource() :
 {
 }
 
-void StillImageSource::AddSource(QString source)
+void StillImageSource::addSource(QString source)
 {
     if (!_loaded)
         _sourcePathList << source;
+    emit sourceChanged(_sourcePathList);
 }
 
-void StillImageSource::AddSources(QStringList sources)
+void StillImageSource::addSources(QStringList sources)
 {
     if (!_loaded)
         _sourcePathList << sources;
+    emit sourceChanged(_sourcePathList);
 }
 
-void StillImageSource::ClearSources()
+void StillImageSource::clearSources()
 {
-    if (!_loaded)
-        _sourcePathList.clear();
+    _sourcePathList.clear();
+    _loaded = false;
+    emit sourceChanged(_sourcePathList);
+    emit sourceStatusChanged(false);
+}
+
+int StillImageSource::sourceCount()
+{
+    return _sourcePathList.size();
 }
 
 /**
@@ -49,8 +58,14 @@ void StillImageSource::ClearSources()
  */
 void StillImageSource::load()
 {
+    if (_sourcePathList.empty()) {
+        return;
+    }
+
     _loaded = true;
     _sourcePathListCurrentPos = _sourcePathList.constBegin();
+
+    emit sourceStatusChanged(true);
 }
 
 /**
@@ -64,10 +79,11 @@ bool StillImageSource::moveNext()
     if (_sourcePathList.isEmpty())
         return false;
 
-    if (_sourcePathListCurrentPos == _sourcePathList.constEnd())
+    if (++_sourcePathListCurrentPos == _sourcePathList.constEnd()) {
+        --_sourcePathListCurrentPos;
         return false;
+    }
 
-    _sourcePathListCurrentPos++;
     return true;
 }
 
@@ -116,6 +132,10 @@ bool StillImageSource::moveEnd()
  */
 QImage StillImageSource::getImage()
 {
+    if (_sourcePathList.empty()) {
+        return QImage();
+    }
+
     QString str(*_sourcePathListCurrentPos);
 
     QImage img = _cacheMgr.getImage(str);
@@ -127,5 +147,13 @@ QImage StillImageSource::getImage()
         _cacheMgr.enqueue(img, str);
 
     return img;
+}
+
+QString StillImageSource::getImageName()
+{
+    if (!_sourcePathList.empty())
+        return *_sourcePathListCurrentPos;
+    else
+        return QString();
 }
 
