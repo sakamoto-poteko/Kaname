@@ -43,3 +43,7 @@ FORMS    += form/Kaname.ui \
 RESOURCES += \
     resources/resources.qrc
 
+gcc:QMAKE_LFLAGS += -static-libgcc
+
+RC_FILE += \
+    resources/kaname.rc

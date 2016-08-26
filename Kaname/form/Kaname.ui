@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Kaname</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/icon/cross.png</normaloff>:/icon/cross.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_4">
     <item row="1" column="1">
@@ -320,7 +324,7 @@ p, li { white-space: pre-wrap; }
   <action name="action_About">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icon/appbar.question.png</normaloff>:/icon/appbar.question.png</iconset>
+     <normaloff>:/icon/question.png</normaloff>:/icon/question.png</iconset>
    </property>
    <property name="text">
     <string>About</string>

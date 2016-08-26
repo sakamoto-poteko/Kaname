@@ -11,7 +11,7 @@ This is a regular Qt subdir project. Execute `qmake` and build it with your favo
 
 ### Tested Platforms
 
-* Windows 8.1 64-bit, Qt 5.7.0/MinGW-w64 5.3.0/shared
+* Windows 8.1 64-bit, Qt 5.7.0/MinGW-W64 5.3.0/shared
 * Windows 8.1 64-bit, Qt 5.7.0/Visual Studio 2015/shared
 
 ## Subdirs

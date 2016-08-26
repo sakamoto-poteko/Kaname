@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Object Name Editor</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/resources.qrc">
+    <normaloff>:/icon/cross.png</normaloff>:/icon/cross.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
     <widget class="QListWidget" name="listWidget">
@@ -50,7 +54,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset resource="../resources/resources.qrc">
+      <iconset>
        <normaloff>:/icon/appbar.minus.png</normaloff>:/icon/appbar.minus.png</iconset>
      </property>
      <property name="shortcut">

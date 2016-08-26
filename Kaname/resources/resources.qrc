@@ -9,8 +9,10 @@
         <file>undo.png</file>
         <file>check.png</file>
         <file>save.png</file>
-        <file>appbar.question.png</file>
+        <file>question.png</file>
         <file>list.png</file>
-        <file>appbar.minus.png</file>
+        <file>minus.png</file>
+        <file>kaname.png</file>
+        <file>cross.png</file>
     </qresource>
 </RCC>

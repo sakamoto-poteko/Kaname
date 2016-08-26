@@ -8,7 +8,7 @@ QT       -= gui
 
 TARGET = LabelJson
 TEMPLATE = lib
-CONFIG += plugin c++11
+CONFIG += plugin c++11 shared
 
 SOURCES += \
     JsonLabelFormatPlugin.cpp
