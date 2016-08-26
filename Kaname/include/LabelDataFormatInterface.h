@@ -16,23 +16,33 @@
  *
  ***************************************************************************/
 
-#include "MarkingBoxManager.h"
+#ifndef LABELINTERFACE_H
+#define LABELINTERFACE_H
 
-MarkingBoxManager::MarkingBoxManager()
-{
-}
+#include <QMap>
+#include <QVector>
+#include <QRect>
+#include <QList>
 
-void MarkingBoxManager::setBoxName(qint64 hash, const QString &filename)
+class LabelDataFormatInterface
 {
-    _markingBoxes[hash].first = filename;
-}
+public:
+    virtual ~LabelDataFormatInterface() { }
+    virtual bool save(const QMap<qint64, QPair<QString, QVector<QRect>>> &boxes,
+                      const QString &savePath,
+                      const QVector<QString> &objnames) = 0;
+    virtual QString formatDescription() = 0;
+    virtual QString formatExtension() = 0;
+    virtual QString formatName() = 0;
+    virtual QString name() = 0;
+    virtual QString version() = 0;
+    virtual QString copyright() = 0;
+    virtual QString guid() = 0;
+};
 
-QVector<QRect> MarkingBoxManager::getBoxes(qint64 hash)
-{
-    return _markingBoxes[hash].second;
-}
 
-QVector<QRect> *MarkingBoxManager::getBoxesRef(qint64 hash)
-{
-    return &_markingBoxes[hash].second;
-}
+#define LabelInterface_iid "moe.afa.utils.Kaneme.LabelDataFormatInterface"
+
+Q_DECLARE_INTERFACE(LabelDataFormatInterface, LabelInterface_iid)
+
+#endif // LABELINTERFACE_H

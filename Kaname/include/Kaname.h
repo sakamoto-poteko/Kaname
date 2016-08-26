@@ -44,6 +44,10 @@ private slots:
     void on_action_AddImages_triggered();
     void on_action_NextImage_triggered();
     void on_action_PreviousImage_triggered();
+    void on_action_Save_triggered();
+    void on_action_EditObjectNames_triggered();
+    void on_action_About_triggered();
+    void on_action_ClearImages_triggered();
 
 private:
     Ui::Kaname *ui;
@@ -52,8 +56,9 @@ private:
     QLabel *_permStatusLbl;
 
     void updatePermStatusText(const QString &status);
-    void updateTempStatusText(const QString &status, int timeout = 500);
+    void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
+    QColor getContrastColor(const QColor &background);
 };
 
 #endif // KANAME_H

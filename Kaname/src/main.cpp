@@ -16,13 +16,48 @@
  *
  ***************************************************************************/
 
-#include "Kaname.h"
 #include <QApplication>
+#include <QDir>
+#include <QPluginLoader>
+#include "Kaname.h"
+#include "LabelDataFormatInterface.h"
+#include "Kaname_global.h"
+
+static void loadplugins()
+{
+    QDir pluginsDir(qApp->applicationDirPath());
+#if defined(Q_OS_WIN)
+    if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
+        pluginsDir.cdUp();
+#elif defined(Q_OS_MAC)
+    if (pluginsDir.dirName() == "MacOS") {
+        pluginsDir.cdUp();
+        pluginsDir.cdUp();
+        pluginsDir.cdUp();
+    }
+#endif
+    pluginsDir.cd("plugins");
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
+        QObject *plugin = pluginLoader.instance();
+        if (plugin) {
+            LabelDataFormatInterface *interface = qobject_cast<LabelDataFormatInterface *>(plugin);
+            if (interface) {
+                __kanamePlugins.LabelDataFormatInterfaces[interface->formatExtension()] = interface;
+            }
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    loadplugins();
+
     Kaname w;
-    w.show();
+    w.showMaximized();
     return a.exec();
 }
+
+KanamePlugins __kanamePlugins;

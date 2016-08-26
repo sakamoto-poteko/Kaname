@@ -20,8 +20,11 @@
 
 #include "Kaname.h"
 #include "ui_Kaname.h"
-
 #include "StillImageSource.h"
+#include "Kaname_global.h"
+#include "LabelDataFormatInterface.h"
+#include "ObjectNameEditor.h"
+#include "About.h"
 
 Kaname::Kaname(QWidget *parent) :
     QMainWindow(parent),
@@ -36,6 +39,10 @@ Kaname::Kaname(QWidget *parent) :
 
     connect(ui->action_ClearImages, SIGNAL(triggered()), _imageSource, SLOT(clearSources()));
     connect(ui->action_ClearImages, SIGNAL(triggered()), ui->marker, SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leImageName, SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leImageSize, SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leNextObj, SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->listMarkedObjects, SLOT(clear()));
     connect(ui->action_LoadImages, SIGNAL(triggered()), _imageSource, SLOT(load()));
     connect(ui->action_UndoCurrentMark, SIGNAL(triggered()), ui->marker, SLOT(undo()));
     connect(ui->action_NextObject, SIGNAL(triggered()), ui->marker, SLOT(skip()));
@@ -55,6 +62,7 @@ void Kaname::imageLoadStatusChanged(bool loaded)
     bool status = !loaded;
     ui->action_AddImages->setEnabled(status);
     ui->action_LoadImages->setEnabled(status);
+    ui->action_EditObjectNames->setEnabled(status);
 
 
     if (loaded) {
@@ -71,26 +79,30 @@ void Kaname::markerBoxUpdated(const QVector<QRect> &boxes)
 
     for (int i = 0; i < boxes.size(); ++i) {
         QRect rect = boxes.at(i);
-        QListWidgetItem *item = new QListWidgetItem(QString("(%1, %2), %3 x %4").
-                                                    arg(rect.x(), 4, 10, QChar('0')).
-                                                    arg(rect.y(), 4, 10,  QChar('0')).
-                                                    arg(rect.width(), 4, 10,  QChar('0')).
-                                                    arg(rect.height(), 4, 10,  QChar('0')));
+        QString objname = ui->marker->getObjectName(i);
+        QListWidgetItem *item = new QListWidgetItem(QString("(%1, %2), %3 x %4 - (%5)").
+                                                    arg(rect.x(), 4, 10, QChar(' ')).
+                                                    arg(rect.y(), 4, 10,  QChar(' ')).
+                                                    arg(rect.width(), 4, 10,  QChar(' ')).
+                                                    arg(rect.height(), 4, 10,  QChar(' ')).
+                                                    arg(objname.isEmpty() ? tr("null") : objname));
         QColor boxColor = ui->marker->getColor(i);
         item->setBackgroundColor(boxColor);
-
-        double gray = boxColor.red() * 0.299 + boxColor.green() * 0.587 + boxColor.blue() * 0.114;
-        if (gray > 130)
-            item->setTextColor(Qt::black);
-        else
-            item->setTextColor(Qt::white);
+        item->setTextColor(getContrastColor(boxColor));
+        item->setFont(QFont("Monospace"));
         ui->listMarkedObjects->addItem(item);
     }
-    QPalette pal;
-    pal.setColor(ui->leNextObj->backgroundRole(), ui->marker->nextColor());
-    ui->leNextObj->setPalette(pal);
-}
 
+    QColor nextColor = ui->marker->nextColor();
+    QColor conColor = getContrastColor(nextColor);
+    QString ss = QString("background-color: rgb(%1, %2, %3);color: rgb(%4, %5, %6);").
+            arg(nextColor.red()).arg(nextColor.green()).arg(nextColor.blue()).
+            arg(conColor.red()).arg(conColor.green()).arg(conColor.blue());
+    ui->leNextObj->setStyleSheet(ss);
+
+    QString nextobjname = ui->marker->nextObjectName();
+    ui->leNextObj->setText(nextobjname);
+}
 
 void Kaname::on_action_AddImages_triggered()
 {
@@ -105,9 +117,8 @@ void Kaname::on_action_AddImages_triggered()
 
     if (!files.isEmpty()) {
         _imageSource->addSources(files);
+        updateTempStatusText(QString(tr("%1 files added.")).arg(files.size()), 2000);
     }
-
-    updateTempStatusText(QString(tr("Adding %1 files...")).arg(files.size()));
 }
 
 void Kaname::updatePermStatusText(const QString &status)
@@ -123,20 +134,28 @@ void Kaname::updateTempStatusText(const QString &status, int timeout)
 void Kaname::getAndRenderImage()
 {
     QImage img = _imageSource->getImage();
-    if (img.isNull()) {
-        updateTempStatusText(tr("Invalid image"));
-        return;
-    } else {
-        // Set img
-        ui->marker->setImage(img);
+    QString fullname = _imageSource->getImageName();
+    QString shortname(QFileInfo(fullname).fileName());
+    ui->marker->setImage(img, fullname);
+    ui->leImageName->setText(shortname);
+    ui->leImageSize->setText(QString("%1 x %2").
+                             arg(img.size().width()).
+                             arg(img.size().height()));
 
-        // Set boxes
-        QString filename(QFileInfo(_imageSource->getImageName()).fileName());
-        ui->leImageName->setText(filename);
-        ui->leImageSize->setText(QString("%1 x %2").
-                                 arg(img.size().width()).
-                                 arg(img.size().height()));
+    if (img.isNull()) {
+        updateTempStatusText(tr("Invalid image"), 5000);
+    } else {
+        updateTempStatusText(tr("Image updated"));
     }
+}
+
+QColor Kaname::getContrastColor(const QColor &background)
+{
+    double gray = background.red() * 0.299 + background.green() * 0.587 + background.blue() * 0.114;
+    if (gray > 130)
+        return Qt::black;
+    else
+        return Qt::white;
 }
 
 void Kaname::on_action_NextImage_triggered()
@@ -155,4 +174,55 @@ void Kaname::on_action_PreviousImage_triggered()
     } else {
         updateTempStatusText(tr("This is the first image"), 5000);
     }
+}
+
+void Kaname::on_action_Save_triggered()
+{
+    QStringList supportedFormats;
+    foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
+        supportedFormats.append(QString("%1 (%2)").
+                                arg(formatInterface->formatName()).
+                                arg(formatInterface->formatExtension()));
+    }
+
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save"), QString(),
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")));
+    if (filename.isEmpty())
+        return;
+
+    QString ext = filename.split('.').last();
+    LabelDataFormatInterface *saver = __kanamePlugins.LabelDataFormatInterfaces["*." + ext];
+    if (!saver) {
+        throw("Failed to retrieve saving plugin. This is a bug.");
+    }
+
+    bool saved = saver->save(_markingBoxMgr.getAllBoxes(), filename, ui->marker->getLabelingObjectNames());
+
+    if (saved)
+        updateTempStatusText(tr("Labeling data saved."));
+    else
+        updateTempStatusText(tr("Labeling data failed to save."));
+}
+
+void Kaname::on_action_EditObjectNames_triggered()
+{
+    ObjectNameEditor editor(this);
+    editor.setLabelingObjectNames(ui->marker->getLabelingObjectNames());
+
+    if (editor.exec() == QDialog::Accepted) {
+        QVector<QString> objnames = editor.getLabelingObjectNames();
+        ui->marker->setLabelingObjectNames(objnames);
+        updateTempStatusText(QString(tr("%1 objects in object list")).arg(objnames.size()));
+    }
+}
+
+void Kaname::on_action_About_triggered()
+{
+    About about;
+    about.exec();
+}
+
+void Kaname::on_action_ClearImages_triggered()
+{
+    _markingBoxMgr.clear();
 }

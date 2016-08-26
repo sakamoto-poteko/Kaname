@@ -141,13 +141,16 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Add Image(s): Ctrl + A&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Edit Object Names: Ctrl + E&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Add Images: Ctrl + A&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Clear Images: Ctrl + W&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Load Images: Ctrl + Q&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Save Labeling Data: Ctrl + S&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Previous Image: A&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Next Image: D&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Skip Current Object: X&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Undo Current Mark: Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Undo Current Mark: Z&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;About: ?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -167,19 +170,24 @@ p, li { white-space: pre-wrap; }
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="action_EditObjectNames"/>
+   <addaction name="separator"/>
    <addaction name="action_AddImages"/>
    <addaction name="action_LoadImages"/>
    <addaction name="action_ClearImages"/>
+   <addaction name="action_Save"/>
    <addaction name="separator"/>
    <addaction name="action_PreviousImage"/>
    <addaction name="action_NextImage"/>
    <addaction name="separator"/>
    <addaction name="action_NextObject"/>
    <addaction name="action_UndoCurrentMark"/>
+   <addaction name="separator"/>
+   <addaction name="action_About"/>
   </widget>
   <action name="action_AddImages">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/add.png</normaloff>:/icon/add.png</iconset>
    </property>
    <property name="text">
@@ -191,7 +199,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_ClearImages">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/clear.png</normaloff>:/icon/clear.png</iconset>
    </property>
    <property name="text">
@@ -206,7 +214,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_NextImage">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/right.png</normaloff>:/icon/right.png</iconset>
    </property>
    <property name="text">
@@ -221,7 +229,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_PreviousImage">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/left.png</normaloff>:/icon/left.png</iconset>
    </property>
    <property name="text">
@@ -236,7 +244,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_NextObject">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/next.png</normaloff>:/icon/next.png</iconset>
    </property>
    <property name="text">
@@ -251,7 +259,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_UndoCurrentMark">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/undo.png</normaloff>:/icon/undo.png</iconset>
    </property>
    <property name="text">
@@ -266,7 +274,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_LoadImages">
    <property name="icon">
-    <iconset resource="resources/resources.qrc">
+    <iconset resource="../resources/resources.qrc">
      <normaloff>:/icon/check.png</normaloff>:/icon/check.png</iconset>
    </property>
    <property name="text">
@@ -277,6 +285,51 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/save.png</normaloff>:/icon/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Labeling Data</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_EditObjectNames">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/list.png</normaloff>:/icon/list.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Object Names</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit object names</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/appbar.question.png</normaloff>:/icon/appbar.question.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>?</string>
    </property>
   </action>
  </widget>
@@ -290,7 +343,7 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources/resources.qrc"/>
+  <include location="../resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

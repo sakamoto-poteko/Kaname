@@ -16,23 +16,23 @@
  *
  ***************************************************************************/
 
-#include "MarkingBoxManager.h"
+#ifndef KANAME_GLOBAL_H
+#define KANAME_GLOBAL_H
 
-MarkingBoxManager::MarkingBoxManager()
-{
-}
+#define KANAME_VERSION "1.0.0"
+#define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
 
-void MarkingBoxManager::setBoxName(qint64 hash, const QString &filename)
-{
-    _markingBoxes[hash].first = filename;
-}
 
-QVector<QRect> MarkingBoxManager::getBoxes(qint64 hash)
-{
-    return _markingBoxes[hash].second;
-}
+#include <QMap>
 
-QVector<QRect> *MarkingBoxManager::getBoxesRef(qint64 hash)
+class LabelDataFormatInterface;
+
+class KanamePlugins
 {
-    return &_markingBoxes[hash].second;
-}
+public:
+    // extension, object
+    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
+};
+
+extern KanamePlugins __kanamePlugins;
+#endif // KANAME_GLOBAL_H

@@ -1,95 +1,85 @@
 /**************************************************************************
- * Copyright (c) 2015 Afa.L Cheng <afa@afa.moe>
+ * Copyright (C) 2016 Afa.L Cheng (afa@afa.moe)
  *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***************************************************************************/
 
-#include "MarkingWidget.h"
+#include <cassert>
 
 #include <QRubberBand>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QResizeEvent>
-
 #include <QDebug>
 
+#include "MarkingWidget.h"
 #include "MarkingBoxManager.h"
 
 MarkingWidget::MarkingWidget(QWidget *parent) : QFrame(parent),
-  _dragging(false), _boxmgr(0)
+  _dragging(false), _actualBoxes(0), _boxmgr(0)
 {
+    this->setCursor(Qt::CrossCursor);
 }
 
-void MarkingWidget::setImage(const QImage &image)
+void MarkingWidget::setImage(const QImage &image, const QString &filename)
 {
+    if (!_boxmgr)
+        return;
+
     clear();
 
     _dragging = false;
 
     _image = image;
     _scaledImage = image.scaled(width(), height(), Qt::KeepAspectRatio);
-    _actualToScaledRatio = _image.width() / (double)_scaledImage.width();
+    _actualToScaledRatio = static_cast<double>(_image.width()) / _scaledImage.width();
+    _boxmgr->setBoxName(_image.cacheKey(), filename);
+    _actualBoxes = _boxmgr->getBoxesRef(_image.cacheKey());
     update();
 
-    if (_boxmgr)
-        syncActualBoxFromMgr();
-
-    emit boxesUpdated(_actualBoxes);
-}
-
-void MarkingWidget::setActualBoxes(const QVector<QRect> &boxes)
-{
-    _actualBoxes = boxes;
     recaculateDisplayBoxes();
     update();
-    emit boxesUpdated(_actualBoxes);
+
+    emit boxesUpdated(*_actualBoxes);
 }
 
 void MarkingWidget::undo()
 {
-    if (_actualBoxes.empty())
+    if (!_actualBoxes || _actualBoxes->empty())
         return;
 
-    _actualBoxes.removeLast();
+    _actualBoxes->removeLast();
     _displayBoxes.removeLast();
     update();
-    emit boxesUpdated(_actualBoxes);
+    emit boxesUpdated(*_actualBoxes);
 }
 
 void MarkingWidget::skip()
 {
-    _actualBoxes.append(QRect());
+    if (!_actualBoxes)
+        return;
+    _actualBoxes->append(QRect());
     _displayBoxes.append(QRect());
-    emit boxesUpdated(_actualBoxes);
+    emit boxesUpdated(*_actualBoxes);
 }
 
 void MarkingWidget::clear()
 {
-    if (_boxmgr)
-        syncActualBoxToMgr();
-
+    _actualBoxes = 0;
     _displayBoxes.clear();
-    _actualBoxes.clear();
-
     _scaledImage = QImage();
     _image = QImage();
 
@@ -138,11 +128,15 @@ void MarkingWidget::mouseReleaseEvent(QMouseEvent *e)
     if (!_dragging)
         return;
 
-    _displayBoxes.append(_dragBox);
-    _actualBoxes.append(calculateActualBox(_dragBox));
+    if (!_actualBoxes)
+        return;
+
+    QRect normalizedBox = _dragBox.normalized();
+    _displayBoxes.append(normalizedBox);
+    _actualBoxes->append(calculateActualBox(normalizedBox));
     _dragging = false;
     update();
-    emit boxesUpdated(_actualBoxes);
+    emit boxesUpdated(*_actualBoxes);
 }
 
 void MarkingWidget::paintEvent(QPaintEvent *e)
@@ -150,12 +144,12 @@ void MarkingWidget::paintEvent(QPaintEvent *e)
     Q_UNUSED(e)
     QPainter painter(this);
 
-    if (!_image.isNull()) {
+    if (!_scaledImage.isNull()) {
         painter.drawImage(0, 0, _scaledImage);
     }
 
     if (_dragging) {
-        painter.setPen(COLOR_TABLE[_actualBoxes.size() % COLOR_TABLE_SIZE]);
+        painter.setPen(COLOR_TABLE[_displayBoxes.size() % COLOR_TABLE_SIZE]);
         painter.drawRect(_dragBox);
     }
 
@@ -175,21 +169,14 @@ void MarkingWidget::resizeEvent(QResizeEvent *e)
 
 void MarkingWidget::recaculateDisplayBoxes()
 {
+    if (!_actualBoxes)
+        return;
+
     QVector<QRect> displayBoxes;
-    foreach (QRect rect, _actualBoxes) {
+    foreach (QRect rect, *_actualBoxes) {
         displayBoxes.append(calculateScaledBox(rect));
     }
     _displayBoxes = displayBoxes;
-}
-
-void MarkingWidget::syncActualBoxToMgr()
-{
-    _boxmgr->setBoxes(_image.cacheKey(), _actualBoxes);
-}
-
-void MarkingWidget::syncActualBoxFromMgr()
-{
-    setActualBoxes(_boxmgr->getBoxes(_image.cacheKey()));
 }
 
 const QColor MarkingWidget::COLOR_TABLE[] = {

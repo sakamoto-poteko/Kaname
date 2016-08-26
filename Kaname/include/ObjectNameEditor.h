@@ -16,23 +16,33 @@
  *
  ***************************************************************************/
 
-#include "MarkingBoxManager.h"
+#ifndef OBJECTNAMEEDITOR_H
+#define OBJECTNAMEEDITOR_H
 
-MarkingBoxManager::MarkingBoxManager()
-{
+#include <QDialog>
+
+namespace Ui {
+class ObjectNameEditor;
 }
 
-void MarkingBoxManager::setBoxName(qint64 hash, const QString &filename)
+class ObjectNameEditor : public QDialog
 {
-    _markingBoxes[hash].first = filename;
-}
+    Q_OBJECT
 
-QVector<QRect> MarkingBoxManager::getBoxes(qint64 hash)
-{
-    return _markingBoxes[hash].second;
-}
+public:
+    explicit ObjectNameEditor(QWidget *parent = 0);
+    ~ObjectNameEditor();
 
-QVector<QRect> *MarkingBoxManager::getBoxesRef(qint64 hash)
-{
-    return &_markingBoxes[hash].second;
-}
+    QVector<QString> getLabelingObjectNames();
+    void setLabelingObjectNames(const QVector<QString> &objs);
+
+private slots:
+    void on_btnDel_clicked();
+
+    void on_btnAdd_clicked();
+
+private:
+    Ui::ObjectNameEditor *ui;
+};
+
+#endif // OBJECTNAMEEDITOR_H
