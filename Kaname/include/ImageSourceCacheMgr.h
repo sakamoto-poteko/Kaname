@@ -27,9 +27,9 @@
 class ImageSourceCacheMgr
 {
 public:
-    ImageSourceCacheMgr(ssize_t cacheSize = 50);
+    ImageSourceCacheMgr(quint64 cacheSize = 50);
 
-    void setCacheSize(ssize_t cacheSize) { _cacheSize = cacheSize; }
+    void setCacheSize(quint64 cacheSize) { _cacheSize = cacheSize; }
 
     QImage getImage(const QString &key);
     void enqueue(const QImage &image, const QString &key);
@@ -37,7 +37,7 @@ public:
     void clear();
 
 private:
-    ssize_t _cacheSize;
+    quint64 _cacheSize;
     QMap<QString, QImage> _imageCache;
     QQueue<QString> _keys;
 };

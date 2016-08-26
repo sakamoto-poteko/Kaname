@@ -108,7 +108,7 @@ void Kaname::on_action_AddImages_triggered()
 {
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose images to mark"),
                                                   #ifndef NDEBUG
-                                                      QString("H:/(C83) (COSPLAY) [ENAKO] 虚空のカナリア"),
+                                                      QString("H:/c83_enako"),
                                                   #else
                                                       QString(),
                                                   #endif
@@ -225,4 +225,5 @@ void Kaname::on_action_About_triggered()
 void Kaname::on_action_ClearImages_triggered()
 {
     _markingBoxMgr.clear();
+    ui->leNextObj->setStyleSheet("");
 }

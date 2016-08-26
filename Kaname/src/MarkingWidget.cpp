@@ -31,7 +31,6 @@
 MarkingWidget::MarkingWidget(QWidget *parent) : QFrame(parent),
   _dragging(false), _actualBoxes(0), _boxmgr(0)
 {
-    this->setCursor(Qt::CrossCursor);
 }
 
 void MarkingWidget::setImage(const QImage &image, const QString &filename)
@@ -41,6 +40,7 @@ void MarkingWidget::setImage(const QImage &image, const QString &filename)
 
     clear();
 
+    setCursor(Qt::CrossCursor);
     _dragging = false;
 
     _image = image;
@@ -78,6 +78,7 @@ void MarkingWidget::skip()
 
 void MarkingWidget::clear()
 {
+    setCursor(Qt::ArrowCursor);
     _actualBoxes = 0;
     _displayBoxes.clear();
     _scaledImage = QImage();

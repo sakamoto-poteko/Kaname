@@ -19,7 +19,7 @@
 
 #include "ImageSourceCacheMgr.h"
 
-ImageSourceCacheMgr::ImageSourceCacheMgr(ssize_t cacheSize) :
+ImageSourceCacheMgr::ImageSourceCacheMgr(quint64 cacheSize) :
     _cacheSize(cacheSize)
 {
 }
