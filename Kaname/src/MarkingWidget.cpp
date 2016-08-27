@@ -44,7 +44,7 @@ void MarkingWidget::setImage(const QImage &image, const QString &filename)
     _dragging = false;
 
     _image = image;
-    _scaledImage = image.scaled(width(), height(), Qt::KeepAspectRatio);
+    _scaledImage = image.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     _actualToScaledRatio = static_cast<double>(_image.width()) / _scaledImage.width();
     _boxmgr->setBoxName(_image.cacheKey(), filename);
     _actualBoxes = _boxmgr->getBoxesRef(_image.cacheKey());
@@ -163,7 +163,7 @@ void MarkingWidget::paintEvent(QPaintEvent *e)
 
 void MarkingWidget::resizeEvent(QResizeEvent *e)
 {
-    _scaledImage = _image.scaled(e->size(), Qt::KeepAspectRatio);
+    _scaledImage = _image.scaled(e->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     _actualToScaledRatio = (double)_image.width() / _scaledImage.width();
     recaculateDisplayBoxes();
 }
