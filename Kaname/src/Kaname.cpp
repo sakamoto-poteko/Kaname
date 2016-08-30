@@ -17,6 +17,7 @@
  ***************************************************************************/
 
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "Kaname.h"
 #include "ui_Kaname.h"
@@ -234,7 +235,12 @@ void Kaname::on_action_Save_triggered()
     if (filename.isEmpty())
         return;
 
-    QString ext = filename.split('.').last();
+    QString ext = QFileInfo(filename).suffix();
+    if (ext.isEmpty()) { // No plugin loaded
+        QMessageBox::critical(this, tr("Unable to save"), tr("No format plugin loaded. Cannot save."));
+        return;
+    }
+
     LabelDataFormatInterface *saver = __kanamePlugins.LabelDataFormatInterfaces["*." + ext];
     if (!saver) {
         throw("Failed to retrieve saving plugin. This is a bug.");
