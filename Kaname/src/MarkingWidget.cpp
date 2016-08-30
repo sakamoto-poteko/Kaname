@@ -29,8 +29,8 @@
 
 MarkingWidget::MarkingWidget(QWidget *parent) : QFrame(parent),
   _draggingNewBox(false), _draggingCurrentBox(false),
-  _actualToScaledRatio(0.), _isZooming(false),
-  _actualBoxes(0), _boxmgr(0), _sizeControlWidget(0),
+  _actualBoxes(0), _actualToScaledRatio(0.), _isZooming(false),
+  _boxmgr(0), _sizeControlWidget(0),
   _currentSelection(-1), _currentSelectionOld(-1), _currentHover(-1),
   _falseTriggerThresholdWidth(10), _falseTriggerThresholdHeight(10),
   _pointsOverlapThreshold(4)

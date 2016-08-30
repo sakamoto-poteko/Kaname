@@ -89,6 +89,10 @@ void Kaname::setButtonStatus(bool loaded)
     ui->action_Save->setEnabled(loaded);
     ui->action_SelectNextObject->setEnabled(loaded);
     ui->action_UndoCurrentMark->setEnabled(loaded);
+    ui->action_Zoom100->setEnabled(loaded);
+    ui->action_ZoomIn->setEnabled(loaded);
+    ui->action_ZoomOut->setEnabled(loaded);
+    ui->action_ZoomReset->setEnabled(loaded);
 }
 
 void Kaname::imageLoadStatusChanged(bool loaded)
