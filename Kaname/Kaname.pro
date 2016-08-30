@@ -23,7 +23,8 @@ SOURCES += src/main.cpp\
     src/MarkingWidget.cpp \
     src/MarkingBoxManager.cpp \
     src/ObjectNameEditor.cpp \
-    src/About.cpp
+    src/About.cpp \
+    src/Hash128Result.cpp
 
 HEADERS  += include/Kaname.h \
     include/AbstractImageSource.h \
@@ -34,7 +35,8 @@ HEADERS  += include/Kaname.h \
     include/Kaname_global.h \
     include/ObjectNameEditor.h \
     include/About.h \
-    include/LabelDataFormatInterface.h
+    include/LabelDataFormatInterface.h \
+    include/Hash128Result.h
 
 FORMS    += form/Kaname.ui \
     form/ObjectNameEditor.ui \

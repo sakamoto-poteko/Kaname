@@ -25,7 +25,7 @@
 #include <QVector>
 #include <QRect>
 
-bool JsonLabelForamtPlugin::save(const QMap<qint64, QPair<QString, QVector<QRect>>> &boxes,
+bool JsonLabelForamtPlugin::save(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &boxes,
                                  const QString &savePath, const QVector<QString> &objnames)
 {
     QFile file(savePath);
@@ -33,8 +33,10 @@ bool JsonLabelForamtPlugin::save(const QMap<qint64, QPair<QString, QVector<QRect
     if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate))
         return false;
 
-    QJsonArray jsonImages;
-    foreach (auto img, boxes) {
+    QJsonArray jsonImagesAry;
+    auto keys = boxes.keys();
+    foreach (auto key, keys) {
+        auto img = boxes[key];
         if (img.first.isEmpty())
             continue;
 
@@ -60,7 +62,9 @@ bool JsonLabelForamtPlugin::save(const QMap<qint64, QPair<QString, QVector<QRect
         QFileInfo finfo(img.first);
         jsonImageObj.insert("file", finfo.fileName());
 
-        jsonImages.append(jsonImageObj);
+        jsonImageObj.insert("hash", key.toString());
+
+        jsonImagesAry.append(jsonImageObj);
     }
 
     QJsonArray jsonObjNames;
@@ -69,7 +73,7 @@ bool JsonLabelForamtPlugin::save(const QMap<qint64, QPair<QString, QVector<QRect
     }
 
     QJsonObject jsonRoot;
-    jsonRoot.insert("images", jsonImages);
+    jsonRoot.insert("images", jsonImagesAry);
     jsonRoot.insert("objectNames", jsonObjNames);
 
     QJsonDocument jsonDoc(jsonRoot);
@@ -78,6 +82,11 @@ bool JsonLabelForamtPlugin::save(const QMap<qint64, QPair<QString, QVector<QRect
     file.write(docByteArray);
     file.close();
     return true;
+}
+
+QHash<Hash128Result, QPair<QString, QList<QRect>>> JsonLabelForamtPlugin::open(const QString &openPath)
+{
+    throw("not implemented");
 }
 
 QString JsonLabelForamtPlugin::formatDescription()
@@ -114,3 +123,5 @@ QString JsonLabelForamtPlugin::guid()
 {
     return JSON_LABEL_FORMAT_PLUGIN_GUID;
 }
+
+

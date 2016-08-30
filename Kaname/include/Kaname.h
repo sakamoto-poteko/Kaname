@@ -39,7 +39,9 @@ public:
 
 private slots:
     void imageLoadStatusChanged(bool loaded);
-    void markerBoxUpdated(const QVector<QRect> &boxes);
+    void markerBoxUpdated(const QList<QRect> &boxes);
+    void drawingNewBox(const QPoint &origin, const QPoint &current);
+    void movingCurrentBox(const QPoint &old, const QPoint &current);
 
     void on_action_AddImages_triggered();
     void on_action_NextImage_triggered();
@@ -54,11 +56,18 @@ private:
     AbstractImageSource *_imageSource;
     MarkingBoxManager _markingBoxMgr;
     QLabel *_permStatusLbl;
+    QString _lastDir;
 
     void updatePermStatusText(const QString &status);
     void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
-    QColor getContrastColor(const QColor &background);
+
+    QColor getContrastColor(const QColor &background)
+    {
+        double gray = background.red() * 0.299 + background.green() * 0.587 + background.blue() * 0.114;
+        return gray > 130 ? Qt::black : Qt::white;
+    }
+    void setButtonStatus(bool loaded);
 };
 
 #endif // KANAME_H

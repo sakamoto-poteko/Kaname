@@ -54,8 +54,8 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>:/icon/appbar.minus.png</normaloff>:/icon/appbar.minus.png</iconset>
+      <iconset resource="../resources/resources.qrc">
+       <normaloff>:/icon/minus.png</normaloff>:/icon/minus.png</iconset>
      </property>
      <property name="shortcut">
       <string>Ctrl+D</string>

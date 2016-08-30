@@ -37,18 +37,27 @@ Kaname::Kaname(QWidget *parent) :
 
     ui->marker->setMarkingBoxManager(&_markingBoxMgr);
 
-    connect(ui->action_ClearImages, SIGNAL(triggered()), _imageSource, SLOT(clearSources()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->marker, SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leImageName, SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leImageSize, SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->leNextObj, SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()), ui->listMarkedObjects, SLOT(clear()));
-    connect(ui->action_LoadImages, SIGNAL(triggered()), _imageSource, SLOT(load()));
-    connect(ui->action_UndoCurrentMark, SIGNAL(triggered()), ui->marker, SLOT(undo()));
-    connect(ui->action_NextObject, SIGNAL(triggered()), ui->marker, SLOT(skip()));
-    connect(ui->marker, SIGNAL(boxesUpdated(QVector<QRect>)), this, SLOT(markerBoxUpdated(QVector<QRect>)));
-    connect(_imageSource, SIGNAL(sourceStatusChanged(bool)), this, SLOT(imageLoadStatusChanged(bool)));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    _imageSource,       SLOT(clearSources()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->marker,         SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leImageName,    SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leImageSize,    SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leNextObj,      SLOT(clear()));
+    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->listMarkedObjects, SLOT(clear()));
+    connect(ui->action_UndoCurrentMark, SIGNAL(triggered()),ui->marker, SLOT(undo()));
+    connect(ui->action_NextObject,  SIGNAL(triggered()),    ui->marker, SLOT(skip()));
+    connect(ui->action_ClearSelection,  SIGNAL(triggered()),ui->marker, SLOT(clearBoxSelection()));
+    connect(ui->action_MoveDown,    SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxDown()));
+    connect(ui->action_MoveUp,      SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxUp()));
+    connect(ui->action_MoveRight,   SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxRight()));
+    connect(ui->action_MoveLeft,    SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxLeft()));
+    connect(ui->action_SelectNextObject,SIGNAL(triggered()),ui->marker, SLOT(selectNextBox()));
+    connect(ui->marker,     SIGNAL(boxesUpdated(QList<QRect>)), this,   SLOT(markerBoxUpdated(QList<QRect>)));
+    connect(_imageSource,   SIGNAL(sourceStatusChanged(bool)),  this,   SLOT(imageLoadStatusChanged(bool)));
 
+    connect(ui->marker, SIGNAL(mouseDraggingNewBox(QPoint,QPoint)), this, SLOT(drawingNewBox(QPoint,QPoint)));
+    connect(ui->marker, SIGNAL(mouseMovingBox(QPoint,QPoint)), this, SLOT(movingCurrentBox(QPoint,QPoint)));
+
+    setButtonStatus(false);
 }
 
 Kaname::~Kaname()
@@ -57,13 +66,29 @@ Kaname::~Kaname()
     delete _imageSource;
 }
 
+void Kaname::setButtonStatus(bool loaded)
+{
+    bool notloaded = !loaded;
+    ui->action_AddImages->setEnabled(notloaded);
+    ui->action_EditObjectNames->setEnabled(notloaded);
+
+    ui->action_ClearImages->setEnabled(loaded);
+    ui->action_ClearSelection->setEnabled(loaded);
+    ui->action_MoveDown->setEnabled(loaded);
+    ui->action_MoveLeft->setEnabled(loaded);
+    ui->action_MoveRight->setEnabled(loaded);
+    ui->action_MoveUp->setEnabled(loaded);
+    ui->action_NextImage->setEnabled(loaded);
+    ui->action_NextObject->setEnabled(loaded);
+    ui->action_PreviousImage->setEnabled(loaded);
+    ui->action_Save->setEnabled(loaded);
+    ui->action_SelectNextObject->setEnabled(loaded);
+    ui->action_UndoCurrentMark->setEnabled(loaded);
+}
+
 void Kaname::imageLoadStatusChanged(bool loaded)
 {
-    bool status = !loaded;
-    ui->action_AddImages->setEnabled(status);
-    ui->action_LoadImages->setEnabled(status);
-    ui->action_EditObjectNames->setEnabled(status);
-
+    setButtonStatus(loaded);
 
     if (loaded) {
         updatePermStatusText(QString(tr("%1 files loaded.")).arg(_imageSource->sourceCount()));
@@ -73,7 +98,7 @@ void Kaname::imageLoadStatusChanged(bool loaded)
     }
 }
 
-void Kaname::markerBoxUpdated(const QVector<QRect> &boxes)
+void Kaname::markerBoxUpdated(const QList<QRect> &boxes)
 {
     ui->listMarkedObjects->clear();
 
@@ -104,6 +129,22 @@ void Kaname::markerBoxUpdated(const QVector<QRect> &boxes)
     ui->leNextObj->setText(nextobjname);
 }
 
+void Kaname::drawingNewBox(const QPoint &origin, const QPoint &current)
+{
+    updateTempStatusText(QString(tr("New Box: (%1, %2) -> (%3, %4)")).
+                         arg(origin.x()).arg(origin.y()).
+                         arg(current.x()).arg(current.y()),
+                         100);
+}
+
+void Kaname::movingCurrentBox(const QPoint &old, const QPoint &current)
+{
+    updateTempStatusText(QString(tr("Moving Box: (%1, %2) -> (%3, %4)")).
+                         arg(old.x()).arg(old.y()).
+                         arg(current.x()).arg(current.y()),
+                         100);
+}
+
 void Kaname::on_action_AddImages_triggered()
 {
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose images to mark"),
@@ -116,8 +157,11 @@ void Kaname::on_action_AddImages_triggered()
                                                       "*.gif *.xbm *.ppm *.pbm);;All files (*.*)");
 
     if (!files.isEmpty()) {
+        _lastDir = QFileInfo(files.first()).absoluteDir().absolutePath();
+
         _imageSource->addSources(files);
         updateTempStatusText(QString(tr("%1 files added.")).arg(files.size()), 2000);
+        _imageSource->load();
     }
 }
 
@@ -149,15 +193,6 @@ void Kaname::getAndRenderImage()
     }
 }
 
-QColor Kaname::getContrastColor(const QColor &background)
-{
-    double gray = background.red() * 0.299 + background.green() * 0.587 + background.blue() * 0.114;
-    if (gray > 130)
-        return Qt::black;
-    else
-        return Qt::white;
-}
-
 void Kaname::on_action_NextImage_triggered()
 {
     if (_imageSource->moveNext()) {
@@ -185,7 +220,7 @@ void Kaname::on_action_Save_triggered()
                                 arg(formatInterface->formatExtension()));
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save"), QString(),
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save"), _lastDir,
                                                     supportedFormats.join(QByteArray::fromStdString(";;")));
     if (filename.isEmpty())
         return;
@@ -227,3 +262,4 @@ void Kaname::on_action_ClearImages_triggered()
     _markingBoxMgr.clear();
     ui->leNextObj->setStyleSheet("");
 }
+

@@ -20,8 +20,10 @@
 #define MARKINGWIDGET_H
 
 #include <QFrame>
+#include <QCryptographicHash>
+#include "Hash128Result.h"
 
-#define COLOR_TABLE_SIZE    42
+#define COLOR_TABLE_SIZE    19
 
 class MarkingBoxManager;
 
@@ -32,9 +34,9 @@ public:
     explicit MarkingWidget(QWidget *parent = 0);
 
     void setImage(const QImage &image, const QString &filename);
-    QVector<QRect> getMarkingBoxes() { return *_actualBoxes; }
+    QList<QRect> getMarkingBoxes() { return *_actualBoxes; }
 
-    void setMarkingBoxManager(MarkingBoxManager *mgr) { _boxmgr = mgr; }
+    void setMarkingBoxManager(MarkingBoxManager *mgr);
     void setLabelingObjectNames(const QVector<QString> &objnames) { _objectNames = objnames; }
     QVector<QString> getLabelingObjectNames() { return _objectNames;}
 
@@ -50,15 +52,51 @@ public:
                                                              _objectNames.at(_displayBoxes.size());
     }
 
+    quint32 getFalseTriggerThresholdWidth() const
+    {
+        return _falseTriggerThresholdWidth;
+    }
+    void setFalseTriggerThresholdWidth(const quint32 &falseTriggerThresholdWidth)
+    {
+        _falseTriggerThresholdWidth = falseTriggerThresholdWidth;
+    }
+
+    quint32 getFalseTriggerThresholdHeight() const
+    {
+        return _falseTriggerThresholdHeight;
+    }
+    void setFalseTriggerThresholdHeight(const quint32 &falseTriggerThresholdHeight)
+    {
+        _falseTriggerThresholdHeight = falseTriggerThresholdHeight;
+    }
+
+    qint32 getPointsOverlapThreshold() const
+    {
+        return _pointsOverlapThreshold;
+    }
+    void setPointsOverlapThreshold(const qint32 &pointsOverlapThreshold)
+    {
+        _pointsOverlapThreshold = pointsOverlapThreshold;
+    }
+
 signals:
-    void boxesUpdated(QVector<QRect> boxes);
+    void boxesUpdated(QList<QRect> boxes);
+    void mouseDraggingNewBox(QPoint origin, QPoint current);
+    void mouseMovingBox(QPoint oldCenter, QPoint currentCenter);
 
 public slots:
     void undo();
     void skip();
     void clear();
+    void selectNextBox();
+    void clearBoxSelection();
+    void moveSelectedBoxLeft(int pixel = 1);
+    void moveSelectedBoxRight(int pixel = 1);
+    void moveSelectedBoxUp(int pixel = 1);
+    void moveSelectedBoxDown(int pixel = 1);
 
 protected:
+    void mouseDoubleClickEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
@@ -67,11 +105,12 @@ protected:
 
 private:
     QPoint _dragOrigin;
-    bool _dragging;
+    bool _draggingNewBox;
+    bool _draggingCurrentBox;
 
     QRect _dragBox;
-    QVector<QRect> _displayBoxes;  // coord to display box
-    QVector<QRect> *_actualBoxes;   // coord relative to orig img
+    QList<QRect> _displayBoxes;  // coord to display box
+    QList<QRect> *_actualBoxes;   // coord relative to orig img
     QVector<QString> _objectNames;
 
     QImage _image;
@@ -80,7 +119,31 @@ private:
 
     MarkingBoxManager *_boxmgr;
 
-    QRect calculateActualBox(QRect scaledBox)
+    qint64  _currentSelection;
+    qint64  _currentSelectionOld;
+    qint64  _currentHover;
+    ///
+    /// \brief _falseTriggerThresholdWidth Default 10
+    ///
+    quint32 _falseTriggerThresholdWidth;
+    ///
+    /// \brief _falseTriggerThresholdHeight Default 10
+    ///
+    quint32 _falseTriggerThresholdHeight;
+
+    qint32 _pointsOverlapThreshold;
+
+    QPoint calculateActualPoint(const QPoint &point)
+    {
+        return point * _actualToScaledRatio;
+    }
+
+    QPoint calculateDisplayPoint(const QPoint &point)
+    {
+        return point / _actualToScaledRatio;
+    }
+
+    QRect calculateActualBox(const QRect &scaledBox)
     {
         return QRect(scaledBox.left() * _actualToScaledRatio,
                      scaledBox.top() * _actualToScaledRatio,
@@ -88,7 +151,7 @@ private:
                      scaledBox.height() * _actualToScaledRatio);
     }
 
-    QRect calculateScaledBox(QRect actualBox)
+    QRect calculateScaledBox(const QRect &actualBox)
     {
         return QRect(actualBox.left() / _actualToScaledRatio,
                      actualBox.top() / _actualToScaledRatio,
@@ -97,7 +160,16 @@ private:
     }
 
     void recaculateDisplayBoxes();
+    qint64 getBoxIndex(const QPoint &center);
+    bool tryMoveBox(int index, const QPoint &newCenter);
+    bool pointsOverlap(const QPoint &p1, const QPoint &p2);
 
+    static Hash128Result imageHash(const QImage &img)
+    {
+        QByteArray ary((const char *)img.constBits(), img.bytesPerLine() * img.height());
+        QByteArray result = QCryptographicHash::hash(ary, QCryptographicHash::Md5);
+        return Hash128Result(result);
+    }
 
     static const QColor COLOR_TABLE[];
 };

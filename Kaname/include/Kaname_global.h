@@ -19,7 +19,7 @@
 #ifndef KANAME_GLOBAL_H
 #define KANAME_GLOBAL_H
 
-#define KANAME_VERSION "1.0.0"
+#define KANAME_VERSION "1.1.0"
 #define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
 
 

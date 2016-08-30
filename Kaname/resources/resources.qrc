@@ -14,5 +14,12 @@
         <file>minus.png</file>
         <file>kaname.png</file>
         <file>cross.png</file>
+        <file>zoomin.png</file>
+        <file>zoomout.png</file>
+        <file>clearselection.png</file>
+        <file>down.png</file>
+        <file>nextobj.png</file>
+        <file>up.png</file>
+        <file>sel-next-obj.png</file>
     </qresource>
 </RCC>
