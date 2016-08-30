@@ -29,11 +29,34 @@ class MarkingBoxManager
 public:
     MarkingBoxManager() {}
 
-    void setBoxName(Hash128Result hash, const QString &filename);
-    QList<QRect> getBoxes(Hash128Result hash);
-    QList<QRect> *getBoxesRef(Hash128Result hash);
+    void setBoxName(Hash128Result hash, const QString &filename)
+    {
+        _markingBoxes[hash].first = filename;
+    }
+
+    QList<QRect> getBoxes(Hash128Result hash)
+    {
+        return _markingBoxes[hash].second;
+    }
+
+    QList<QRect> *getBoxesRef(Hash128Result hash)
+    {
+        return &_markingBoxes[hash].second;
+    }
+
     QHash<Hash128Result, QPair<QString, QList<QRect>>> getAllBoxes() { return _markingBoxes; }
+
     void clear() { _markingBoxes.clear(); }
+
+    QHash<Hash128Result, QPair<QString, QList<QRect>>> getMarkingBoxes() const
+    {
+        return _markingBoxes;
+    }
+
+    void setMarkingBoxes(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &markingBoxes)
+    {
+        _markingBoxes = markingBoxes;
+    }
 
 private:
     QHash<Hash128Result, QPair<QString, QList<QRect>>> _markingBoxes;

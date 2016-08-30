@@ -34,6 +34,9 @@ public:
         }
     }
     Hash128Result(quint64 hi, quint64 lo) : _hi(hi), _lo(lo) {}
+    Hash128Result(const QString &hash) : Hash128Result(QByteArray::fromHex(hash.toUtf8()))
+    {
+    }
 
     quint64 hi() const
     {

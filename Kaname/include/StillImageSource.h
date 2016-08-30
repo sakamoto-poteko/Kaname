@@ -32,8 +32,8 @@ public:
     virtual QString getImageName();
 
 public slots:
-    virtual void addSource(QString source);
-    virtual void addSources(QStringList sources);
+    virtual void addSource(const QString &source);
+    virtual void addSources(const QStringList &sources);
     virtual void clearSources();
     virtual void load();
     virtual bool moveNext();

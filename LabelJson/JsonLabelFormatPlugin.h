@@ -37,7 +37,9 @@ public:
     bool save(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &boxes,
               const QString &savePath,
               const QVector<QString> &objnames) Q_DECL_OVERRIDE;
-    QHash<Hash128Result, QPair<QString, QList<QRect>>> open(const QString &openPath) Q_DECL_OVERRIDE;
+    QHash<Hash128Result, QPair<QString, QList<QRect>>> open(const QString &openPath,
+                                                            QVector<QString> *objectNames = 0,
+                                                            const QString &imgPath = QString()) Q_DECL_OVERRIDE;
 
     QString formatDescription() Q_DECL_OVERRIDE;
     QString formatExtension() Q_DECL_OVERRIDE;

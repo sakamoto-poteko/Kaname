@@ -51,6 +51,8 @@ private slots:
     void on_action_About_triggered();
     void on_action_ClearImages_triggered();
 
+    void on_action_Open_triggered();
+
 private:
     Ui::Kaname *ui;
     AbstractImageSource *_imageSource;

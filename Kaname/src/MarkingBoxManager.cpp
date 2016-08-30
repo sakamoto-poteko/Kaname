@@ -17,18 +17,3 @@
  ***************************************************************************/
 
 #include "MarkingBoxManager.h"
-
-void MarkingBoxManager::setBoxName(Hash128Result hash, const QString &filename)
-{
-    _markingBoxes[hash].first = filename;
-}
-
-QList<QRect> MarkingBoxManager::getBoxes(Hash128Result hash)
-{
-    return _markingBoxes[hash].second;
-}
-
-QList<QRect> *MarkingBoxManager::getBoxesRef(Hash128Result hash)
-{
-    return &_markingBoxes[hash].second;
-}

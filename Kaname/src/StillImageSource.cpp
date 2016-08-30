@@ -23,14 +23,14 @@ StillImageSource::StillImageSource() :
 {
 }
 
-void StillImageSource::addSource(QString source)
+void StillImageSource::addSource(const QString &source)
 {
     if (!_loaded)
         _sourcePathList << source;
     emit sourceChanged(_sourcePathList);
 }
 
-void StillImageSource::addSources(QStringList sources)
+void StillImageSource::addSources(const QStringList &sources)
 {
     if (!_loaded)
         _sourcePathList << sources;

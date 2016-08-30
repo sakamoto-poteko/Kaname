@@ -77,6 +77,7 @@ void Kaname::setButtonStatus(bool loaded)
     bool notloaded = !loaded;
     ui->action_AddImages->setEnabled(notloaded);
     ui->action_EditObjectNames->setEnabled(notloaded);
+    ui->action_Open->setEnabled(notloaded);
 
     ui->action_ClearImages->setEnabled(loaded);
     ui->action_ClearSelection->setEnabled(loaded);
@@ -276,4 +277,49 @@ void Kaname::on_action_ClearImages_triggered()
 {
     _markingBoxMgr.clear();
     ui->leNextObj->setStyleSheet("");
+}
+
+void Kaname::on_action_Open_triggered()
+{
+    QStringList supportedFormats;
+    foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
+        supportedFormats.append(QString("%1 (%2)").
+                                arg(formatInterface->formatName()).
+                                arg(formatInterface->formatExtension()));
+    }
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Save"),
+                                                #ifndef NDEBUG
+                                                    QString("H:/c83_enako"),
+                                                #else
+                                                    _lastDir,
+                                                #endif
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")));
+    if (filename.isEmpty())
+        return;
+
+    QString ext = QFileInfo(filename).suffix();
+    LabelDataFormatInterface *opener = __kanamePlugins.LabelDataFormatInterfaces["*." + ext];
+    if (!opener) {
+        throw("Failed to retrieve open plugin. This is a bug.");
+    }
+
+    QVector<QString> labelingObjectNames;
+    auto savedData = opener->open(filename, &labelingObjectNames);
+    if (savedData.isEmpty()) {
+        QMessageBox::warning(this, tr("Empty dataset"), tr("The dataset seems to be empty.\n"
+                                                           "This may caused by invalid file."));
+        updateTempStatusText("Empty dataset");
+        return;
+    } else {
+        _markingBoxMgr.setMarkingBoxes(savedData);
+        QStringList imgFiles;
+        std::for_each(savedData.begin(), savedData.end(), [&imgFiles](const QPair<QString, QList<QRect>> &val) {
+            qDebug(val.first.toStdString().c_str());
+            imgFiles << val.first;
+        });
+        _imageSource->addSources(imgFiles);
+        _imageSource->load();
+        updateTempStatusText(tr("Labeling data loaded."));
+    }
 }

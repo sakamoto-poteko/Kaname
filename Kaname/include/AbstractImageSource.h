@@ -33,8 +33,8 @@ public:
     virtual QString getImageName() = 0;
 
 public slots:
-    virtual void addSource(QString source) = 0;
-    virtual void addSources(QStringList sources) = 0;
+    virtual void addSource(const QString &source) = 0;
+    virtual void addSources(const QStringList &sources) = 0;
     virtual void clearSources() = 0;
     virtual void load() = 0;
     virtual bool moveNext() = 0;
