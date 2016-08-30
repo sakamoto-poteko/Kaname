@@ -79,6 +79,11 @@ public:
         _pointsOverlapThreshold = pointsOverlapThreshold;
     }
 
+    void setSizeControlWidget(QWidget *sizeControlWidget)
+    {
+        _sizeControlWidget = sizeControlWidget;
+    }
+
 signals:
     void boxesUpdated(QList<QRect> boxes);
     void mouseDraggingNewBox(QPoint origin, QPoint current);
@@ -94,6 +99,12 @@ public slots:
     void moveSelectedBoxRight(int pixel = 1);
     void moveSelectedBoxUp(int pixel = 1);
     void moveSelectedBoxDown(int pixel = 1);
+    // scale a scaled image
+    void enlarge2x();
+    void shrink2x();
+    void scaleToOriginalSize();
+    // scale to widget size
+    void scaleToSizeControl();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *e);
@@ -116,8 +127,11 @@ private:
     QImage _image;
     QImage _scaledImage;
     double _actualToScaledRatio;
+    bool   _isZooming;
 
     MarkingBoxManager *_boxmgr;
+
+    QWidget *_sizeControlWidget;
 
     qint64  _currentSelection;
     qint64  _currentSelectionOld;

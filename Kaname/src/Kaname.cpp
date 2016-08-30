@@ -36,6 +36,7 @@ Kaname::Kaname(QWidget *parent) :
     ui->statusBar->addPermanentWidget(_permStatusLbl);
 
     ui->marker->setMarkingBoxManager(&_markingBoxMgr);
+    ui->marker->setSizeControlWidget(ui->markerScrollArea);
 
     connect(ui->action_ClearImages, SIGNAL(triggered()),    _imageSource,       SLOT(clearSources()));
     connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->marker,         SLOT(clear()));
@@ -51,6 +52,10 @@ Kaname::Kaname(QWidget *parent) :
     connect(ui->action_MoveRight,   SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxRight()));
     connect(ui->action_MoveLeft,    SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxLeft()));
     connect(ui->action_SelectNextObject,SIGNAL(triggered()),ui->marker, SLOT(selectNextBox()));
+    connect(ui->action_Zoom100, SIGNAL(triggered()),        ui->marker, SLOT(scaleToOriginalSize()));
+    connect(ui->action_ZoomIn,  SIGNAL(triggered()),        ui->marker, SLOT(enlarge2x()));
+    connect(ui->action_ZoomOut, SIGNAL(triggered()),        ui->marker, SLOT(shrink2x()));
+    connect(ui->action_ZoomReset,   SIGNAL(triggered()),    ui->marker, SLOT(scaleToSizeControl()));
     connect(ui->marker,     SIGNAL(boxesUpdated(QList<QRect>)), this,   SLOT(markerBoxUpdated(QList<QRect>)));
     connect(_imageSource,   SIGNAL(sourceStatusChanged(bool)),  this,   SLOT(imageLoadStatusChanged(bool)));
 
@@ -262,4 +267,3 @@ void Kaname::on_action_ClearImages_triggered()
     _markingBoxMgr.clear();
     ui->leNextObj->setStyleSheet("");
 }
-

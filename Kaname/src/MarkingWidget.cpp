@@ -29,7 +29,8 @@
 
 MarkingWidget::MarkingWidget(QWidget *parent) : QFrame(parent),
   _draggingNewBox(false), _draggingCurrentBox(false),
-  _actualBoxes(0), _boxmgr(0),
+  _actualToScaledRatio(0.), _isZooming(false),
+  _actualBoxes(0), _boxmgr(0), _sizeControlWidget(0),
   _currentSelection(-1), _currentSelectionOld(-1), _currentHover(-1),
   _falseTriggerThresholdWidth(10), _falseTriggerThresholdHeight(10),
   _pointsOverlapThreshold(4)
@@ -49,8 +50,7 @@ void MarkingWidget::setImage(const QImage &image, const QString &filename)
     _draggingNewBox = false;
 
     _image = image;
-    _scaledImage = image.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    _actualToScaledRatio = static_cast<double>(_image.width()) / _scaledImage.width();
+    scaleToSizeControl();
     Hash128Result hash = imageHash(_image);
     _boxmgr->setBoxName(hash, filename);
     _actualBoxes = _boxmgr->getBoxesRef(hash);
@@ -97,6 +97,7 @@ void MarkingWidget::clear()
     _displayBoxes.clear();
     _scaledImage = QImage();
     _image = QImage();
+    _isZooming = false;
 
     update();
 }
@@ -156,6 +157,36 @@ void MarkingWidget::moveSelectedBoxDown(int pixel)
     QPoint center = _displayBoxes.at(_currentSelection).center();
     center.setY(center.y() + pixel);
     tryMoveBox(_currentSelection, center);
+    update();
+}
+
+void MarkingWidget::enlarge2x()
+{
+    if (_scaledImage.isNull() || _image.isNull())
+        return;
+    _isZooming = true;
+    QSize size = _scaledImage.size() * 2;
+    _scaledImage = _image.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
+    _actualToScaledRatio = _image.width() / static_cast<double>(size.width());
+    recaculateDisplayBoxes();
+//    repaint();
+
+    setFixedSize(_scaledImage.size());
+    update();
+}
+
+void MarkingWidget::shrink2x()
+{
+    if (_scaledImage.isNull() || _image.isNull())
+        return;
+    _isZooming = true;
+    QSize size = _scaledImage.size() / 2;
+    _scaledImage = _image.scaled(size, Qt::KeepAspectRatio, Qt::FastTransformation);
+    _actualToScaledRatio = _image.width() / static_cast<double>(size.width());
+    recaculateDisplayBoxes();
+//    repaint();
+
+    setFixedSize(_scaledImage.size());
     update();
 }
 
@@ -272,7 +303,7 @@ void MarkingWidget::mouseReleaseEvent(QMouseEvent *e)
 
 void MarkingWidget::paintEvent(QPaintEvent *e)
 {
-    Q_UNUSED(e)
+    QFrame::paintEvent(e);
     QPainter painter(this);
 
     if (!_scaledImage.isNull()) {
@@ -294,14 +325,17 @@ void MarkingWidget::paintEvent(QPaintEvent *e)
         painter.drawRect(rect);
         painter.drawEllipse(QRect(rect.center().x() - 1, rect.center().y() - 1, 2, 2));
     }
-
 }
 
 void MarkingWidget::resizeEvent(QResizeEvent *e)
 {
+    if (_isZooming)
+        return;
+
     _scaledImage = _image.scaled(e->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     _actualToScaledRatio = (double)_image.width() / _scaledImage.width();
     recaculateDisplayBoxes();
+    // it will update() autoly
 }
 
 void MarkingWidget::recaculateDisplayBoxes()
@@ -360,6 +394,37 @@ bool MarkingWidget::tryMoveBox(int index, const QPoint &newCenter)
 bool MarkingWidget::pointsOverlap(const QPoint &p1, const QPoint &p2)
 {
     return (p1 - p2).manhattanLength() < _pointsOverlapThreshold;
+}
+
+void MarkingWidget::scaleToOriginalSize()
+{
+    if (_image.isNull())
+        return;
+    _isZooming = true;
+    _scaledImage = _image;
+    _actualToScaledRatio = 1;
+    recaculateDisplayBoxes();
+    repaint();
+
+    setFixedSize(_scaledImage.size());
+    update();
+}
+
+void MarkingWidget::scaleToSizeControl()
+{
+    if ( _image.isNull())
+        return;
+    _isZooming = false;
+    _scaledImage = _image.scaled(width(), height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    _actualToScaledRatio = static_cast<double>(_image.width()) / _scaledImage.width();
+    recaculateDisplayBoxes();
+    repaint();
+
+    if (_sizeControlWidget) {
+        resize(_sizeControlWidget->size());
+        setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    }
+    update();
 }
 
 const QColor MarkingWidget::COLOR_TABLE[] = {
