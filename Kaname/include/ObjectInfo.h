@@ -16,4 +16,18 @@
  *
  ***************************************************************************/
 
-#include "MarkingBoxManager.h"
+#ifndef OBJECTINFO_H
+#define OBJECTINFO_H
+
+#include <QString>
+#include <QColor>
+
+struct ObjectInfo
+{
+    QString objectName;
+    QColor  objectColor;
+    qreal   aspectRatio;
+    bool    aspectRatioSet;
+};
+
+#endif // OBJECTINFO_H

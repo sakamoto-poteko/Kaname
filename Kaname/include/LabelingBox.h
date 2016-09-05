@@ -16,22 +16,19 @@
  *
  ***************************************************************************/
 
-#ifndef KANAME_GLOBAL_H
-#define KANAME_GLOBAL_H
+#ifndef LABELINGBOX_H
+#define LABELINGBOX_H
 
-#define KANAME_VERSION "2.0.0"
-#define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
+#include <QColor>
+#include <QRectF>
 
-#include <QMap>
-
-class LabelDataFormatInterface;
-
-class KanamePlugins
+struct LabelingBox
 {
-public:
-    // extension, object
-    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
+    QRectF  position;
+    QColor  color;
+    qreal   aspectRatio;
+    bool    aspectRatioSet;
+    QString objName;
 };
 
-extern KanamePlugins __kanamePlugins;
-#endif // KANAME_GLOBAL_H
+#endif // LABELINGBOX_H

@@ -20,46 +20,9 @@
 #define MARKINGBOXMANAGER_H
 
 #include <QHash>
-#include <QRect>
+#include "LabelingBox.h"
 
-#include "Hash128Result.h"
-
-class MarkingBoxManager
-{
-public:
-    MarkingBoxManager() {}
-
-    void setBoxName(Hash128Result hash, const QString &filename)
-    {
-        _markingBoxes[hash].first = filename;
-    }
-
-    QList<QRect> getBoxes(Hash128Result hash)
-    {
-        return _markingBoxes[hash].second;
-    }
-
-    QList<QRect> *getBoxesRef(Hash128Result hash)
-    {
-        return &_markingBoxes[hash].second;
-    }
-
-    QHash<Hash128Result, QPair<QString, QList<QRect>>> getAllBoxes() { return _markingBoxes; }
-
-    void clear() { _markingBoxes.clear(); }
-
-    QHash<Hash128Result, QPair<QString, QList<QRect>>> getMarkingBoxes() const
-    {
-        return _markingBoxes;
-    }
-
-    void setMarkingBoxes(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &markingBoxes)
-    {
-        _markingBoxes = markingBoxes;
-    }
-
-private:
-    QHash<Hash128Result, QPair<QString, QList<QRect>>> _markingBoxes;
-};
+typedef QList<LabelingBox> LabelingBoxList;
+typedef QHash<QString, LabelingBoxList> BoxManager;
 
 #endif // MARKINGBOXMANAGER_H

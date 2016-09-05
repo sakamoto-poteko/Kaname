@@ -16,22 +16,32 @@
  *
  ***************************************************************************/
 
-#ifndef KANAME_GLOBAL_H
-#define KANAME_GLOBAL_H
+#ifndef OBJECTSELECTIONBUTTON_H
+#define OBJECTSELECTIONBUTTON_H
 
-#define KANAME_VERSION "2.0.0"
-#define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
+#include <QPushButton>
 
-#include <QMap>
+#include "ObjectInfo.h"
 
-class LabelDataFormatInterface;
-
-class KanamePlugins
+class ObjectSelectionButton : public QPushButton
 {
+Q_OBJECT
 public:
-    // extension, object
-    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
+    ObjectSelectionButton(const ObjectInfo &objInfo, QWidget *parent = Q_NULLPTR);
+
+    static QColor getContrastColor(const QColor &background)
+    {
+        qreal gray = background.red() * 0.299 + background.green() * 0.587 + background.blue() * 0.114;
+        return gray > 130 ? Qt::black : Qt::white;
+    }
+
+signals:
+    void selected(ObjectInfo objInfo);
+
+private:
+    ObjectInfo  _objInfo;
+
+
 };
 
-extern KanamePlugins __kanamePlugins;
-#endif // KANAME_GLOBAL_H
+#endif // OBJECTSELECTIONBUTTON_H

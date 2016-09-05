@@ -18,6 +18,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QGraphicsScene>
 
 #include "Kaname.h"
 #include "ui_Kaname.h"
@@ -26,50 +27,64 @@
 #include "LabelDataFormatInterface.h"
 #include "ObjectNameEditor.h"
 #include "About.h"
+#include "LabelingScene.h"
+
+#include <QGLWidget>
 
 Kaname::Kaname(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::Kaname)
+    ui(new Ui::Kaname), _boxManager(0), _labelingScene(0)
 {
     ui->setupUi(this);
+    ui->objectsVLayout->setAlignment(Qt::AlignTop);
+
+    _nullScene = new QGraphicsScene;
+    _boxManager = new BoxManager;
     _imageSource = new StillImageSource();
     _permStatusLbl = new QLabel;
     ui->statusBar->addPermanentWidget(_permStatusLbl);
 
-    ui->marker->setMarkingBoxManager(&_markingBoxMgr);
-    ui->marker->setSizeControlWidget(ui->markerScrollArea);
+    connect(ui->action_ClearImages, &QAction::triggered,    _imageSource,       &AbstractImageSource::clearSources);
+    connect(ui->action_ClearImages, &QAction::triggered,    ui->leImageName,    &QLineEdit::clear);
+    connect(ui->action_ClearImages, &QAction::triggered,    ui->leImageSize,    &QLineEdit::clear);
+    connect(ui->action_ClearImages, &QAction::triggered,    ui->leNextObj,      &QLineEdit::clear);
+    connect(ui->action_ClearSelection,  &QAction::triggered,ui->labelingView,   &LabelingGraphicsView::clearSelection);
+    connect(ui->action_MoveDown,    &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxDown);
+    connect(ui->action_MoveUp,      &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxUp);
+    connect(ui->action_MoveRight,   &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxRight);
+    connect(ui->action_MoveLeft,    &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxLeft);
+    connect(ui->action_SelectNextObject,&QAction::triggered,ui->labelingView,   &LabelingGraphicsView::selectNextObject);
+    connect(ui->action_Zoom100, &QAction::triggered,    ui->labelingView, &LabelingGraphicsView::scaleImgSize);
+    connect(ui->action_ZoomIn,  &QAction::triggered,    ui->labelingView, &LabelingGraphicsView::scaleUp2x);
+    connect(ui->action_ZoomOut, &QAction::triggered,    ui->labelingView, &LabelingGraphicsView::scaleDown2x);
+    connect(ui->action_ZoomReset,   &QAction::triggered,ui->labelingView, &LabelingGraphicsView::scaleFitWindow);
+    connect(ui->action_DeleteSelected,  &QAction::triggered,ui->labelingView,   &LabelingGraphicsView::deleteSelected);
+    connect(_imageSource,   &AbstractImageSource::sourceStatusChanged,  this,   &Kaname::imageLoadStatusChanged);
+    connect(_imageSource,   &AbstractImageSource::sourceChanged,        this,   &Kaname::imageSourceChanged);
 
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    _imageSource,       SLOT(clearSources()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->marker,         SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leImageName,    SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leImageSize,    SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->leNextObj,      SLOT(clear()));
-    connect(ui->action_ClearImages, SIGNAL(triggered()),    ui->listMarkedObjects, SLOT(clear()));
-    connect(ui->action_UndoCurrentMark, SIGNAL(triggered()),ui->marker, SLOT(undo()));
-    connect(ui->action_NextObject,  SIGNAL(triggered()),    ui->marker, SLOT(skip()));
-    connect(ui->action_ClearSelection,  SIGNAL(triggered()),ui->marker, SLOT(clearBoxSelection()));
-    connect(ui->action_MoveDown,    SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxDown()));
-    connect(ui->action_MoveUp,      SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxUp()));
-    connect(ui->action_MoveRight,   SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxRight()));
-    connect(ui->action_MoveLeft,    SIGNAL(triggered()),    ui->marker, SLOT(moveSelectedBoxLeft()));
-    connect(ui->action_SelectNextObject,SIGNAL(triggered()),ui->marker, SLOT(selectNextBox()));
-    connect(ui->action_Zoom100, SIGNAL(triggered()),        ui->marker, SLOT(scaleToOriginalSize()));
-    connect(ui->action_ZoomIn,  SIGNAL(triggered()),        ui->marker, SLOT(enlarge2x()));
-    connect(ui->action_ZoomOut, SIGNAL(triggered()),        ui->marker, SLOT(shrink2x()));
-    connect(ui->action_ZoomReset,   SIGNAL(triggered()),    ui->marker, SLOT(scaleToSizeControl()));
-    connect(ui->marker,     SIGNAL(boxesUpdated(QList<QRect>)), this,   SLOT(markerBoxUpdated(QList<QRect>)));
-    connect(_imageSource,   SIGNAL(sourceStatusChanged(bool)),  this,   SLOT(imageLoadStatusChanged(bool)));
-
-    connect(ui->marker, SIGNAL(mouseDraggingNewBox(QPoint,QPoint)), this, SLOT(drawingNewBox(QPoint,QPoint)));
-    connect(ui->marker, SIGNAL(mouseMovingBox(QPoint,QPoint)), this, SLOT(movingCurrentBox(QPoint,QPoint)));
 
     setButtonStatus(false);
+//    setButtonStatus(true);
+
+    ObjectInfo oi, oj;
+    oi.aspectRatioSet = false;
+    oi.objectColor = Qt::green;
+    oi.objectName = "sucks";
+    oj.aspectRatioSet = true;
+    oj.aspectRatio = 1.;
+    oj.objectColor = Qt::yellow;
+    oj.objectName = "fuck";
+
+    populateObjectSelectionButtons(QList<ObjectInfo>{oi,oj});
 }
+
 
 Kaname::~Kaname()
 {
     delete ui;
     delete _imageSource;
+    delete _boxManager;
+    delete _nullScene;
 }
 
 void Kaname::setButtonStatus(bool loaded)
@@ -109,35 +124,13 @@ void Kaname::imageLoadStatusChanged(bool loaded)
     }
 }
 
-void Kaname::markerBoxUpdated(const QList<QRect> &boxes)
+void Kaname::imageSourceChanged(const QStringList &sources)
 {
-    ui->listMarkedObjects->clear();
-
-    for (int i = 0; i < boxes.size(); ++i) {
-        QRect rect = boxes.at(i);
-        QString objname = ui->marker->getObjectName(i);
-        QListWidgetItem *item = new QListWidgetItem(QString("(%1, %2), %3 x %4 - (%5)").
-                                                    arg(rect.x(), 4, 10, QChar(' ')).
-                                                    arg(rect.y(), 4, 10,  QChar(' ')).
-                                                    arg(rect.width(), 4, 10,  QChar(' ')).
-                                                    arg(rect.height(), 4, 10,  QChar(' ')).
-                                                    arg(objname.isEmpty() ? tr("null") : objname));
-        QColor boxColor = ui->marker->getColor(i);
-        item->setBackgroundColor(boxColor);
-        item->setTextColor(getContrastColor(boxColor));
-        item->setFont(QFont("Monospace"));
-        ui->listMarkedObjects->addItem(item);
+    _boxManager->clear();
+    foreach (const QString &str, sources) {
+        QString shortname(QFileInfo(str).fileName());
+        (*_boxManager)[shortname];
     }
-
-    QColor nextColor = ui->marker->nextColor();
-    QColor conColor = getContrastColor(nextColor);
-    QString ss = QString("background-color: rgb(%1, %2, %3);color: rgb(%4, %5, %6);").
-            arg(nextColor.red()).arg(nextColor.green()).arg(nextColor.blue()).
-            arg(conColor.red()).arg(conColor.green()).arg(conColor.blue());
-    ui->leNextObj->setStyleSheet(ss);
-
-    QString nextobjname = ui->marker->nextObjectName();
-    ui->leNextObj->setText(nextobjname);
 }
 
 void Kaname::drawingNewBox(const QPoint &origin, const QPoint &current)
@@ -154,6 +147,40 @@ void Kaname::movingCurrentBox(const QPoint &old, const QPoint &current)
                          arg(old.x()).arg(old.y()).
                          arg(current.x()).arg(current.y()),
                          100);
+}
+
+void Kaname::clearObjectSelectionButtons()
+{
+    foreach (ObjectSelectionButton *btn, _objSelectionButtons) {
+        delete btn;
+    }
+    _objSelectionButtons.clear();
+}
+
+void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
+{
+    for (int i = 0; i < objs.size(); ++i) {
+        ObjectInfo info = objs.at(i);
+        ObjectSelectionButton *btn = new ObjectSelectionButton(info, ui->objectsList);
+        connect(btn, &ObjectSelectionButton::selected, ui->labelingView, &LabelingGraphicsView::setObjectInfo);
+        connect(btn, &ObjectSelectionButton::selected, [this](const ObjectInfo &info) {
+            QColor nextColor = info.objectColor;
+            QColor conColor = ObjectSelectionButton::getContrastColor(nextColor);
+            QString ss = QString("background-color: rgb(%1, %2, %3);color: rgb(%4, %5, %6);").
+                    arg(nextColor.red()).arg(nextColor.green()).arg(nextColor.blue()).
+                    arg(conColor.red()).arg(conColor.green()).arg(conColor.blue());
+            ui->leNextObj->setStyleSheet(ss);
+            ui->leNextObj->setText(info.objectName);
+        });
+
+        ui->objectsVLayout->addWidget(btn);
+        _objSelectionButtons.append(btn);
+
+        if (i < 9)
+            btn->setShortcut(QKeySequence(Qt::Key_1 + i));
+        if (i == 9)
+            btn->setShortcut(QKeySequence(Qt::Key_0));
+    }
 }
 
 void Kaname::on_action_AddImages_triggered()
@@ -191,11 +218,21 @@ void Kaname::getAndRenderImage()
     QImage img = _imageSource->getImage();
     QString fullname = _imageSource->getImageName();
     QString shortname(QFileInfo(fullname).fileName());
-    ui->marker->setImage(img, fullname);
+
+    if (_labelingScene)
+        delete _labelingScene;
+    _labelingScene = new LabelingScene(img, shortname, _boxManager, this);
+    ui->labelingView->setScene(_labelingScene);
+    ui->labelingView->scaleFitWindow();
+
     ui->leImageName->setText(shortname);
     ui->leImageSize->setText(QString("%1 x %2").
                              arg(img.size().width()).
                              arg(img.size().height()));
+
+    if (!_objSelectionButtons.empty()) {
+        _objSelectionButtons.first()->click();
+    }
 
     if (img.isNull()) {
         updateTempStatusText(tr("Invalid image"), 5000);
@@ -247,24 +284,12 @@ void Kaname::on_action_Save_triggered()
         throw("Failed to retrieve saving plugin. This is a bug.");
     }
 
-    bool saved = saver->save(_markingBoxMgr.getAllBoxes(), filename, ui->marker->getLabelingObjectNames());
+    bool saved = saver->save(*_boxManager, filename);
 
     if (saved)
         updateTempStatusText(tr("Labeling data saved."));
     else
         updateTempStatusText(tr("Labeling data failed to save."));
-}
-
-void Kaname::on_action_EditObjectNames_triggered()
-{
-    ObjectNameEditor editor(this);
-    editor.setLabelingObjectNames(ui->marker->getLabelingObjectNames());
-
-    if (editor.exec() == QDialog::Accepted) {
-        QVector<QString> objnames = editor.getLabelingObjectNames();
-        ui->marker->setLabelingObjectNames(objnames);
-        updateTempStatusText(QString(tr("%1 objects in object list")).arg(objnames.size()));
-    }
 }
 
 void Kaname::on_action_About_triggered()
@@ -275,8 +300,11 @@ void Kaname::on_action_About_triggered()
 
 void Kaname::on_action_ClearImages_triggered()
 {
-    _markingBoxMgr.clear();
     ui->leNextObj->setStyleSheet("");
+    _boxManager->clear();
+    ui->labelingView->setScene(_nullScene);
+    delete _labelingScene;
+    _labelingScene = 0;
 }
 
 void Kaname::on_action_Open_triggered()
@@ -304,22 +332,26 @@ void Kaname::on_action_Open_triggered()
         throw("Failed to retrieve open plugin. This is a bug.");
     }
 
-    QVector<QString> labelingObjectNames;
-    auto savedData = opener->open(filename, &labelingObjectNames);
-    if (savedData.isEmpty()) {
-        QMessageBox::warning(this, tr("Empty dataset"), tr("The dataset seems to be empty.\n"
-                                                           "This may caused by invalid file."));
+    auto savedData = opener->open(filename, _boxManager);
+
+    if (!savedData) {
+        QMessageBox::warning(this, tr("Empty dataset"), tr("Unable to load data."));
         updateTempStatusText("Empty dataset");
         return;
     } else {
-        _markingBoxMgr.setMarkingBoxes(savedData);
-        QStringList imgFiles;
-        std::for_each(savedData.begin(), savedData.end(), [&imgFiles](const QPair<QString, QList<QRect>> &val) {
-            qDebug(val.first.toStdString().c_str());
-            imgFiles << val.first;
-        });
-        _imageSource->addSources(imgFiles);
-        _imageSource->load();
-        updateTempStatusText(tr("Labeling data loaded."));
+//        QStringList imgFiles;
+//        std::for_each(savedData.begin(), savedData.end(), [&imgFiles](const QPair<QString, QList<QRect>> &val) {
+//            imgFiles << val.first;
+//        });
+//        _imageSource->addSources(imgFiles);
+//        _imageSource->load();
+//        updateTempStatusText(tr("Labeling data loaded."));
     }
+}
+
+
+void Kaname::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+    ui->labelingView->scaleFitWindow();
 }

@@ -16,22 +16,21 @@
  *
  ***************************************************************************/
 
-#ifndef KANAME_GLOBAL_H
-#define KANAME_GLOBAL_H
+#include <QPalette>
+#include <QColor>
 
-#define KANAME_VERSION "2.0.0"
-#define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
+#include "ObjectSelectionButton.h"
 
-#include <QMap>
-
-class LabelDataFormatInterface;
-
-class KanamePlugins
+ObjectSelectionButton::ObjectSelectionButton(const ObjectInfo &objInfo, QWidget *parent) :
+    QPushButton(parent), _objInfo(objInfo)
 {
-public:
-    // extension, object
-    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
-};
+    QColor conColor = getContrastColor(_objInfo.objectColor);
+    setStyleSheet(QString("border:0px;background-color:rgb(%1,%2,%3);color:rgb(%4,%5,%6);").
+                  arg(_objInfo.objectColor.red()).arg(_objInfo.objectColor.green()).arg(_objInfo.objectColor.blue()).
+                  arg(conColor.red()).arg(conColor.green()).arg(conColor.blue()));
 
-extern KanamePlugins __kanamePlugins;
-#endif // KANAME_GLOBAL_H
+    setText(QString("%1, %2").arg(_objInfo.objectName).
+            arg(_objInfo.aspectRatioSet ? QString::number(_objInfo.aspectRatio) : tr("N/A")));
+    connect(this, &ObjectSelectionButton::clicked, [this](){ emit selected(_objInfo); });
+}
+

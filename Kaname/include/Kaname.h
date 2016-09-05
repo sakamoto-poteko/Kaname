@@ -21,7 +21,8 @@
 
 #include <QMainWindow>
 #include <QLabel>
-#include <MarkingBoxManager.h>
+#include "LabelingScene.h"
+#include "ObjectSelectionButton.h"
 
 class AbstractImageSource;
 
@@ -32,43 +33,46 @@ class Kaname;
 class Kaname : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit Kaname(QWidget *parent = 0);
     ~Kaname();
 
+
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+
 private slots:
     void imageLoadStatusChanged(bool loaded);
-    void markerBoxUpdated(const QList<QRect> &boxes);
+    void imageSourceChanged(const QStringList &sources);
     void drawingNewBox(const QPoint &origin, const QPoint &current);
     void movingCurrentBox(const QPoint &old, const QPoint &current);
+    void clearObjectSelectionButtons();
+    void populateObjectSelectionButtons(const QList<ObjectInfo> &objs);
 
     void on_action_AddImages_triggered();
     void on_action_NextImage_triggered();
     void on_action_PreviousImage_triggered();
     void on_action_Save_triggered();
-    void on_action_EditObjectNames_triggered();
     void on_action_About_triggered();
     void on_action_ClearImages_triggered();
-
     void on_action_Open_triggered();
+
 
 private:
     Ui::Kaname *ui;
     AbstractImageSource *_imageSource;
-    MarkingBoxManager _markingBoxMgr;
+    BoxManager *_boxManager;
     QLabel *_permStatusLbl;
     QString _lastDir;
+    LabelingScene *_labelingScene;
+    QGraphicsScene *_nullScene;
+    QList<ObjectSelectionButton *> _objSelectionButtons;
 
     void updatePermStatusText(const QString &status);
     void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
 
-    QColor getContrastColor(const QColor &background)
-    {
-        double gray = background.red() * 0.299 + background.green() * 0.587 + background.blue() * 0.114;
-        return gray > 130 ? Qt::black : Qt::white;
-    }
+
     void setButtonStatus(bool loaded);
 };
 

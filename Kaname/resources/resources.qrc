@@ -25,5 +25,6 @@
         <file>zoomreset.png</file>
         <file>zoom1x.png</file>
         <file>open.png</file>
+        <file>delete.png</file>
     </qresource>
 </RCC>

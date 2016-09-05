@@ -16,22 +16,5 @@
  *
  ***************************************************************************/
 
-#ifndef KANAME_GLOBAL_H
-#define KANAME_GLOBAL_H
+#include "ObjectInfo.h"
 
-#define KANAME_VERSION "2.0.0"
-#define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
-
-#include <QMap>
-
-class LabelDataFormatInterface;
-
-class KanamePlugins
-{
-public:
-    // extension, object
-    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
-};
-
-extern KanamePlugins __kanamePlugins;
-#endif // KANAME_GLOBAL_H

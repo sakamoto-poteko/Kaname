@@ -20,7 +20,7 @@
 #define LABELJSONPLUGIN_H
 
 #define JSON_LABEL_FORMAT_PLUGIN_GUID "59ED2ED0-889E-4175-A0E1-B5C8297B8FF8"
-#define JSON_LABEL_FORMAT_PLUGIN_VERSION "1.1.0"
+#define JSON_LABEL_FORMAT_PLUGIN_VERSION "2.0.0"
 #define JSON_LABEL_FORMAT_PLUGIN_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
 
 
@@ -34,12 +34,8 @@ class JsonLabelForamtPlugin : public QObject, LabelDataFormatInterface
     Q_PLUGIN_METADATA(IID "moe.afa.utils.Kaneme.LabelDataFormatInterface" FILE "JsonLabelFormatPlugin.json")
     Q_INTERFACES(LabelDataFormatInterface)
 public:
-    bool save(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &boxes,
-              const QString &savePath,
-              const QVector<QString> &objnames) Q_DECL_OVERRIDE;
-    QHash<Hash128Result, QPair<QString, QList<QRect>>> open(const QString &openPath,
-                                                            QVector<QString> *objectNames = 0,
-                                                            const QString &imgPath = QString()) Q_DECL_OVERRIDE;
+    virtual bool save(const BoxManager &boxes, const QString &savePath) Q_DECL_OVERRIDE;
+    virtual bool open(const QString &openPath, BoxManager *boxman, const QString &imgPath) Q_DECL_OVERRIDE;
 
     QString formatDescription() Q_DECL_OVERRIDE;
     QString formatExtension() Q_DECL_OVERRIDE;
@@ -48,6 +44,10 @@ public:
     QString version() Q_DECL_OVERRIDE;
     QString copyright() Q_DECL_OVERRIDE;
     QString guid() Q_DECL_OVERRIDE;
+
+    // LabelDataFormatInterface interface
+public:
+
 };
 
 #endif // LABELJSONPLUGIN_H

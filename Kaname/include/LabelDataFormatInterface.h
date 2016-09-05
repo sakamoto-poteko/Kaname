@@ -20,21 +20,14 @@
 #define LABELINTERFACE_H
 
 #include <QHash>
-#include <QVector>
-#include <QRect>
-#include <QList>
-#include "Hash128Result.h"
+#include "BoxManager.h"
 
 class LabelDataFormatInterface
 {
 public:
     virtual ~LabelDataFormatInterface() { }
-    virtual bool save(const QHash<Hash128Result, QPair<QString, QList<QRect>>> &boxes,
-                      const QString &savePath,
-                      const QVector<QString> &objnames) = 0;
-    virtual QHash<Hash128Result, QPair<QString, QList<QRect>>> open(const QString &openPath,
-                                                                    QVector<QString> *objectNames = 0,
-                                                                    const QString &imgPath = QString()) = 0;
+    virtual bool save(const BoxManager &boxes, const QString &savePath) = 0;
+    virtual bool open(const QString &openPath, BoxManager *boxMan, const QString &imgPath = QString()) = 0;
     virtual QString formatDescription() = 0;
     virtual QString formatExtension() = 0;
     virtual QString formatName() = 0;

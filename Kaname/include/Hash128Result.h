@@ -21,6 +21,8 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QImage>
+#include <QCryptographicHash>
 
 class Hash128Result
 {
@@ -64,6 +66,13 @@ public:
         *(quint64 *)result.data() = _hi;
         *(quint64 *)(result.data() + 8) = _lo;
         return result.toHex();
+    }
+
+    static Hash128Result imageHash(const QImage &img)
+    {
+        QByteArray ary((const char *)img.constBits(), img.bytesPerLine() * img.height());
+        QByteArray result = QCryptographicHash::hash(ary, QCryptographicHash::Md5);
+        return Hash128Result(result);
     }
 
 private:
