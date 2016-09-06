@@ -50,9 +50,6 @@ private slots:
 
 private:
     Ui::About *ui;
-
-    QHash<QString, LabelDataFormatInterface *> _labelDataFormatInterfaces;
-    QHash<QString, LabelingObjectDefinitionInterface *> _labelObjDefInterfaces;
 };
 
 #endif // ABOUT_H

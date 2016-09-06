@@ -33,13 +33,17 @@ About::About(QWidget *parent) :
 
     foreach (LabelDataFormatInterface *formatPlugin, __kanamePlugins.LabelDataFormatInterfaces) {
         QString pluginName = formatPlugin->name();
-        _labelDataFormatInterfaces[pluginName] = formatPlugin;
-        ui->listComponent->addItem(pluginName);
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(pluginName);
+        item->setToolTip(formatPlugin->guid());
+        ui->listComponent->addItem(item);
     }
     foreach (LabelingObjectDefinitionInterface *formatPlugin, __kanamePlugins.LabelObjectDefinitionInterfaces) {
         QString pluginName = formatPlugin->name();
-        _labelObjDefInterfaces[pluginName] = formatPlugin;
-        ui->listComponent->addItem(pluginName);
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(pluginName);
+        item->setToolTip(formatPlugin->guid());
+        ui->listComponent->addItem(item);
     }
 }
 
@@ -55,6 +59,7 @@ void About::on_listComponent_currentItemChanged(QListWidgetItem *current, QListW
         return;
 
     QString comName = current->text();
+    QUuid guid = QUuid(current->toolTip());
 
     if (comName == "Kaname") {
         QString detail("Kaname " KANAME_VERSION "\n"   // Name, Version
@@ -65,14 +70,26 @@ void About::on_listComponent_currentItemChanged(QListWidgetItem *current, QListW
         return;
     }
 
-    if (_labelDataFormatInterfaces.contains(comName)) {
-        LabelDataFormatInterface *p = _labelDataFormatInterfaces[comName];
+    LabelDataFormatInterface *ldfi = __kanamePlugins.LabelDataFormatInterfaces[guid];
+    if (ldfi) {
         QString detail = QString("%1 %2\n"  // Name, Version
                                  "%3\n\n"    // Copyright
                                  "%4\n"      // Format description
                                  "UID: %5").  // GUID
-                arg(p->name()).arg(p->version()).arg(p->copyright()).
-                arg(p->formatDescription()).arg(p->guid());
+                arg(ldfi->name()).arg(ldfi->version()).arg(ldfi->copyright()).
+                arg(ldfi->formatDescription()).arg(ldfi->guid());
+        ui->lblDetail->setText(detail);
+        return;
+    }
+
+    LabelingObjectDefinitionInterface *lodi = __kanamePlugins.LabelObjectDefinitionInterfaces[guid];
+    if (lodi) {
+        QString detail = QString("%1 %2\n"  // Name, Version
+                                 "%3\n\n"    // Copyright
+                                 "%4\n"      // Format description
+                                 "UID: %5").  // GUID
+                arg(lodi->name()).arg(lodi->version()).arg(lodi->copyright()).
+                arg(lodi->formatDescription()).arg(lodi->guid());
         ui->lblDetail->setText(detail);
         return;
     }
