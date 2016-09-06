@@ -56,7 +56,7 @@ private slots:
     void on_action_About_triggered();
     void on_action_ClearImages_triggered();
     void on_action_Open_triggered();
-
+    void on_action_EditObjectNames_triggered();
 
 private:
     Ui::Kaname *ui;
@@ -71,8 +71,6 @@ private:
     void updatePermStatusText(const QString &status);
     void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
-
-
     void setButtonStatus(bool loaded);
 };
 

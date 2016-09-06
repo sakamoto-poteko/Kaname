@@ -21,6 +21,7 @@
 
 #include "Kaname_global.h"
 #include "LabelDataFormatInterface.h"
+#include "LabelingObjectDefinitionInterface.h"
 
 About::About(QWidget *parent) :
     QDialog(parent),
@@ -33,6 +34,11 @@ About::About(QWidget *parent) :
     foreach (LabelDataFormatInterface *formatPlugin, __kanamePlugins.LabelDataFormatInterfaces) {
         QString pluginName = formatPlugin->name();
         _labelDataFormatInterfaces[pluginName] = formatPlugin;
+        ui->listComponent->addItem(pluginName);
+    }
+    foreach (LabelingObjectDefinitionInterface *formatPlugin, __kanamePlugins.LabelObjectDefinitionInterfaces) {
+        QString pluginName = formatPlugin->name();
+        _labelObjDefInterfaces[pluginName] = formatPlugin;
         ui->listComponent->addItem(pluginName);
     }
 }

@@ -26,7 +26,7 @@
 #define ABOUT_H
 
 #include <QDialog>
-#include <QMap>
+#include <QHash>
 
 class QListWidgetItem;
 
@@ -35,6 +35,7 @@ class About;
 }
 
 class LabelDataFormatInterface;
+class LabelingObjectDefinitionInterface;
 
 class About : public QDialog
 {
@@ -50,7 +51,8 @@ private slots:
 private:
     Ui::About *ui;
 
-    QMap<QString, LabelDataFormatInterface *> _labelDataFormatInterfaces;
+    QHash<QString, LabelDataFormatInterface *> _labelDataFormatInterfaces;
+    QHash<QString, LabelingObjectDefinitionInterface *> _labelObjDefInterfaces;
 };
 
 #endif // ABOUT_H

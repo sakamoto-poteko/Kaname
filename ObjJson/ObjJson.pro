@@ -1,19 +1,18 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-08-25T19:13:46
+# Project created by QtCreator 2016-09-06T13:06:57
 #
 #-------------------------------------------------
 
-QT       += gui
+QT       += core gui
 
-TARGET = LabelJson
+TARGET = ObjJson
 TEMPLATE = lib
 CONFIG += plugin c++11 shared
 
-SOURCES += \
-    JsonLabelFormatPlugin.cpp
+SOURCES += JsonLabelingObjDef.cpp
 
-HEADERS += \
-    JsonLabelFormatPlugin.h
+HEADERS += JsonLabelingObjDef.h
 
 INCLUDEPATH += ../Kaname/include
+

@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QColor>
+#include <QList>
 
 struct ObjectInfo
 {
@@ -29,5 +30,7 @@ struct ObjectInfo
     qreal   aspectRatio;
     bool    aspectRatioSet;
 };
+
+typedef QList<ObjectInfo> ObjectInfoList;
 
 #endif // OBJECTINFO_H

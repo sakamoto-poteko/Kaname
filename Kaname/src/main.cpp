@@ -21,6 +21,7 @@
 #include <QPluginLoader>
 #include "Kaname.h"
 #include "LabelDataFormatInterface.h"
+#include "LabelingObjectDefinitionInterface.h"
 #include "Kaname_global.h"
 
 static void loadplugins()
@@ -43,9 +44,15 @@ static void loadplugins()
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
-            LabelDataFormatInterface *interface = qobject_cast<LabelDataFormatInterface *>(plugin);
-            if (interface) {
-                __kanamePlugins.LabelDataFormatInterfaces[interface->formatExtension()] = interface;
+            LabelDataFormatInterface *ldfint = qobject_cast<LabelDataFormatInterface *>(plugin);
+            if (ldfint) {
+                __kanamePlugins.LabelDataFormatInterfaces[QUuid(ldfint->guid())] = ldfint;
+                continue;
+            }
+            LabelingObjectDefinitionInterface *lodint = qobject_cast<LabelingObjectDefinitionInterface *>(plugin);
+            if (lodint) {
+               __kanamePlugins.LabelObjectDefinitionInterfaces[QUuid(lodint->guid())] = lodint;
+               continue;
             }
         }
     }

@@ -78,108 +78,93 @@ bool JsonLabelForamtPlugin::save(const BoxManager &boxes, const QString &savePat
 
 bool JsonLabelForamtPlugin::open(const QString &openPath, BoxManager *boxman, const QString &imgPath)
 {
-    return false;
+    Q_UNUSED(imgPath);
+
+    QFile f(openPath);
+    if (!f.open(QIODevice::ReadOnly))
+        return false;
+
+    QByteArray jsonStr = f.readAll();
+
+    BoxManager &man = *boxman;
+
+    QJsonParseError err;
+    auto jsonDoc = QJsonDocument::fromJson(jsonStr, &err);
+    if (err.error != QJsonParseError::NoError || !jsonDoc.isObject())
+        return false;
+
+    auto jsonRootObject = jsonDoc.object();
+    auto jsonImagesVal = jsonRootObject["images"];
+    if (!jsonImagesVal.isArray())
+        return false;
+    auto jsonImagesArray = jsonImagesVal.toArray();
+
+    foreach (QJsonValue jsonImgVal, jsonImagesArray) {
+        if (!jsonImgVal.isObject())
+            continue;
+
+        QJsonObject jsonImgObj = jsonImgVal.toObject();
+        QJsonValue jsonBoxesVal = jsonImgObj["boxes"];
+        QJsonValue jsonImgFile = jsonImgObj["file"];
+        if (!jsonImgFile.isString())
+            continue;
+        QString filename = jsonImgFile.toString();
+
+        if (!jsonBoxesVal.isArray())
+            continue;
+        QJsonArray jsonBoxesArray = jsonBoxesVal.toArray();
+
+        LabelingBoxList boxList;
+        foreach (QJsonValue jsonBoxVal, jsonBoxesArray) {
+            if (!jsonBoxVal.isObject())
+                continue;
+
+            LabelingBox box;
+            QJsonObject jsonBoxObj = jsonBoxVal.toObject();
+
+            double top, left, height, width;
+            if (!jsonBoxObj["height"].isDouble())
+                continue;
+            height = jsonBoxObj["height"].toDouble();
+
+            if (!jsonBoxObj["top"].isDouble())
+                continue;
+            top = jsonBoxObj["top"].toDouble();
+
+            if (!jsonBoxObj["left"].isDouble())
+                continue;
+            left = jsonBoxObj["left"].toDouble();
+
+            if (!jsonBoxObj["width"].isDouble())
+                continue;
+            width = jsonBoxObj["width"].toDouble();
+
+            box.position = QRectF(left, top, width, height);
+
+            if (!jsonBoxObj["object"].isString())
+                continue;
+            box.objName = jsonBoxObj["object"].toString();
+
+            if (!jsonBoxObj["color"].isString())
+                continue;
+            box.color.setNamedColor(jsonBoxObj["color"].toString());
+            if (!box.color.isValid())
+                continue;
+
+            if (!jsonBoxObj["aspectRatio"].isDouble())
+                box.aspectRatioSet = false;
+            else {
+                box.aspectRatioSet = true;
+                box.aspectRatio = jsonBoxObj["aspectRatio"].toDouble();
+            }
+            boxList.append(box);
+        }
+
+        man[filename] = boxList;
+    }
+
+    return !man.empty();
 }
-
-
-
-
-//QHash<Hash128Result, QPair<QString, QList<QRect>>> JsonLabelForamtPlugin::open(const QString &openPath,
-//                                                                               QVector<QString> *objectNames, const QString &imgPath)
-//{
-//    QHash<Hash128Result, QPair<QString, QList<QRect>>> ret;
-//    QVector<QString> objNames;
-
-//    QDir imgdir = imgPath.isEmpty() ? QFileInfo(openPath).absoluteDir() : imgPath;
-
-//    QFile f(openPath);
-//    if (!f.open(QIODevice::ReadOnly))
-//        return ret;
-
-//    QByteArray jsonStr = f.readAll();
-
-//    QJsonParseError err;
-//    auto jsonDoc = QJsonDocument::fromJson(jsonStr, &err);
-//    if (err.error != QJsonParseError::NoError || !jsonDoc.isObject())
-//        return ret;
-
-//    auto jsonRootObject = jsonDoc.object();
-//    auto jsonImagesVal = jsonRootObject["images"];
-//    if (!jsonImagesVal.isArray())
-//        return ret;
-//    auto jsonImagesArray = jsonImagesVal.toArray();
-
-//    auto jsonObjectNamesVal = jsonRootObject["objectNames"];
-//    if (!jsonObjectNamesVal.isArray())
-//        return ret;
-//    auto jsonObjectNamesArray = jsonObjectNamesVal.toArray();
-
-//    foreach (QJsonValue jsonImgVal, jsonImagesArray) {
-//        if (!jsonImgVal.isObject())
-//            continue;
-
-//        QJsonObject jsonImgObj = jsonImgVal.toObject();
-//        QJsonValue jsonBoxesVal = jsonImgObj["boxes"];
-//        if (!jsonBoxesVal.isArray())
-//            continue;
-//        QJsonArray jsonBoxesArray = jsonBoxesVal.toArray();
-
-//        QJsonValue jsonFilenameVal = jsonImgObj["file"];
-//        if (!jsonFilenameVal.isString())
-//            continue;
-//        QString filename = jsonFilenameVal.toString();
-
-//        QJsonValue jsonHashVal = jsonImgObj["hash"];
-//        if (!jsonHashVal.isString())
-//            continue;
-//        Hash128Result hash(jsonHashVal.toString());
-
-//        QPair<QString, QList<QRect>> imgInfoPair;
-//        imgInfoPair.first = imgdir.filePath(filename);
-
-//        foreach (QJsonValue jsonBoxVal, jsonBoxesArray) {
-//            if (!jsonBoxVal.isObject())
-//                continue;
-
-//            int left, top, height, width;
-//            QJsonObject jsonBoxObj = jsonBoxVal.toObject();
-
-//            if (!jsonBoxObj["height"].isDouble())
-//                continue;
-//            height = jsonBoxObj["height"].toInt();
-
-//            if (!jsonBoxObj["top"].isDouble())
-//                continue;
-//            top = jsonBoxObj["top"].toInt();
-
-//            if (!jsonBoxObj["left"].isDouble())
-//                continue;
-//            left = jsonBoxObj["left"].toInt();
-
-//            if (!jsonBoxObj["width"].isDouble())
-//                continue;
-//            width = jsonBoxObj["width"].toInt();
-
-//            imgInfoPair.second.append(QRect(left, top, width, height));
-//        }
-
-//        ret[hash] = imgInfoPair;
-//    }
-
-//    for (QJsonValue jsonObjName : jsonObjectNamesArray) {
-//        if (!jsonObjName.isString()) {
-//            objNames.clear();
-//            break;
-//        }
-
-//        objNames.append(jsonObjName.toString());
-//    }
-
-//    if (objectNames)
-//        *objectNames = objNames;
-
-//    return ret;
-//}
 
 QString JsonLabelForamtPlugin::formatDescription()
 {

@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     LabelJson \
-    Kaname
+    Kaname \
+    ObjJson
 
 OTHER_FILES += README.md

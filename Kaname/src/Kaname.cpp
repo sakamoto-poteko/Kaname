@@ -25,11 +25,10 @@
 #include "StillImageSource.h"
 #include "Kaname_global.h"
 #include "LabelDataFormatInterface.h"
+#include "LabelingObjectDefinitionInterface.h"
 #include "ObjectNameEditor.h"
 #include "About.h"
 #include "LabelingScene.h"
-
-#include <QGLWidget>
 
 Kaname::Kaname(QWidget *parent) :
     QMainWindow(parent),
@@ -40,9 +39,10 @@ Kaname::Kaname(QWidget *parent) :
 
     _nullScene = new QGraphicsScene;
     _boxManager = new BoxManager;
-    _imageSource = new StillImageSource();
+    _imageSource = new StillImageSource;
     _permStatusLbl = new QLabel;
     ui->statusBar->addPermanentWidget(_permStatusLbl);
+    ui->labelingView->setScene(_nullScene);
 
     connect(ui->action_ClearImages, &QAction::triggered,    _imageSource,       &AbstractImageSource::clearSources);
     connect(ui->action_ClearImages, &QAction::triggered,    ui->leImageName,    &QLineEdit::clear);
@@ -66,16 +66,16 @@ Kaname::Kaname(QWidget *parent) :
     setButtonStatus(false);
 //    setButtonStatus(true);
 
-    ObjectInfo oi, oj;
-    oi.aspectRatioSet = false;
-    oi.objectColor = Qt::green;
-    oi.objectName = "sucks";
-    oj.aspectRatioSet = true;
-    oj.aspectRatio = 1.;
-    oj.objectColor = Qt::yellow;
-    oj.objectName = "fuck";
+//    ObjectInfo oi, oj;
+//    oi.aspectRatioSet = false;
+//    oi.objectColor = Qt::green;
+//    oi.objectName = "sucks";
+//    oj.aspectRatioSet = true;
+//    oj.aspectRatio = 1.;
+//    oj.objectColor = Qt::yellow;
+//    oj.objectName = "fuck";
 
-    populateObjectSelectionButtons(QList<ObjectInfo>{oi,oj});
+//    populateObjectSelectionButtons(QList<ObjectInfo>{oi,oj});
 }
 
 
@@ -181,6 +181,9 @@ void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
         if (i == 9)
             btn->setShortcut(QKeySequence(Qt::Key_0));
     }
+    if (!_objSelectionButtons.empty()) {
+        _objSelectionButtons.first()->click();
+    }
 }
 
 void Kaname::on_action_AddImages_triggered()
@@ -262,14 +265,19 @@ void Kaname::on_action_PreviousImage_triggered()
 void Kaname::on_action_Save_triggered()
 {
     QStringList supportedFormats;
+    QHash<QString, LabelDataFormatInterface *> formatMap;
     foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
-        supportedFormats.append(QString("%1 (%2)").
-                                arg(formatInterface->formatName()).
-                                arg(formatInterface->formatExtension()));
+        QString filter = QString("%1 (%2)").
+                arg(formatInterface->formatName()).
+                arg(formatInterface->formatExtension());
+        supportedFormats.append(filter);
+        formatMap[filter] = formatInterface;
     }
 
+    QString selectedFilter;
     QString filename = QFileDialog::getSaveFileName(this, tr("Save"), _lastDir,
-                                                    supportedFormats.join(QByteArray::fromStdString(";;")));
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")),
+                                                    &selectedFilter);
     if (filename.isEmpty())
         return;
 
@@ -279,7 +287,7 @@ void Kaname::on_action_Save_triggered()
         return;
     }
 
-    LabelDataFormatInterface *saver = __kanamePlugins.LabelDataFormatInterfaces["*." + ext];
+    LabelDataFormatInterface *saver = formatMap[selectedFilter];
     if (!saver) {
         throw("Failed to retrieve saving plugin. This is a bug.");
     }
@@ -310,42 +318,50 @@ void Kaname::on_action_ClearImages_triggered()
 void Kaname::on_action_Open_triggered()
 {
     QStringList supportedFormats;
+    QHash<QString, LabelDataFormatInterface *> formatMap;
     foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
-        supportedFormats.append(QString("%1 (%2)").
-                                arg(formatInterface->formatName()).
-                                arg(formatInterface->formatExtension()));
+        QString filter = QString("%1 (%2)").
+                arg(formatInterface->formatName()).
+                arg(formatInterface->formatExtension());
+        supportedFormats.append(filter);
+        formatMap[filter] = formatInterface;
     }
 
+    QString selectedFilter;
     QString filename = QFileDialog::getOpenFileName(this, tr("Save"),
                                                 #ifndef NDEBUG
                                                     QString("H:/c83_enako"),
                                                 #else
                                                     _lastDir,
                                                 #endif
-                                                    supportedFormats.join(QByteArray::fromStdString(";;")));
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")),
+                                                    &selectedFilter);
     if (filename.isEmpty())
         return;
 
-    QString ext = QFileInfo(filename).suffix();
-    LabelDataFormatInterface *opener = __kanamePlugins.LabelDataFormatInterfaces["*." + ext];
+    LabelDataFormatInterface *opener = formatMap[selectedFilter];
     if (!opener) {
         throw("Failed to retrieve open plugin. This is a bug.");
     }
 
-    auto savedData = opener->open(filename, _boxManager);
+    BoxManager boxMgr;
+    auto savedData = opener->open(filename, &boxMgr);
 
     if (!savedData) {
         QMessageBox::warning(this, tr("Empty dataset"), tr("Unable to load data."));
         updateTempStatusText("Empty dataset");
         return;
     } else {
-//        QStringList imgFiles;
-//        std::for_each(savedData.begin(), savedData.end(), [&imgFiles](const QPair<QString, QList<QRect>> &val) {
-//            imgFiles << val.first;
-//        });
-//        _imageSource->addSources(imgFiles);
-//        _imageSource->load();
-//        updateTempStatusText(tr("Labeling data loaded."));
+        QStringList imgFiles;
+        QList<QString> imgs = boxMgr.keys();
+        QDir dir = QFileInfo(filename).dir();
+        std::for_each(imgs.constBegin(), imgs.constEnd(), [&imgFiles, &dir](const QString &str){
+            imgFiles << dir.filePath(str);
+        });
+        _imageSource->addSources(imgFiles);
+        *_boxManager = boxMgr;
+        _imageSource->load();
+        updateTempStatusText(tr("Labeling data loaded."));
     }
 }
 
@@ -354,4 +370,37 @@ void Kaname::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event);
     ui->labelingView->scaleFitWindow();
+}
+
+void Kaname::on_action_EditObjectNames_triggered()
+{
+    QStringList supportedFormats;
+    QHash<QString, LabelingObjectDefinitionInterface *> formatMap;
+    foreach (auto formatInterface, __kanamePlugins.LabelObjectDefinitionInterfaces) {
+        QString filter = QString("%1 (%2)").
+                arg(formatInterface->formatName()).
+                arg(formatInterface->formatExtension());
+        supportedFormats.append(filter);
+        formatMap[filter] = formatInterface;
+    }
+
+    QString selectedFilter;
+    QString filename = QFileDialog::getOpenFileName(this, tr("Save"),
+                                                #ifndef NDEBUG
+                                                    QString("H:/c83_enako"),
+                                                #else
+                                                    _lastDir,
+                                                #endif
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")),
+                                                    &selectedFilter);
+    if (filename.isEmpty())
+        return;
+
+    auto opener = formatMap[selectedFilter];
+    if (!opener) {
+        throw("Failed to retrieve open plugin. This is a bug.");
+    }
+
+    ObjectInfoList objInfoList = opener->open(filename);
+    populateObjectSelectionButtons(objInfoList);
 }

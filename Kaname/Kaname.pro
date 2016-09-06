@@ -46,7 +46,8 @@ HEADERS  += include/Kaname.h \
     include/LabelingScene.h \
     include/LabelingBox.h \
     include/ObjectInfo.h \
-    include/ObjectSelectionButton.h
+    include/ObjectSelectionButton.h \
+    include/LabelingObjectDefinitionInterface.h
 
 FORMS    += form/Kaname.ui \
     form/ObjectNameEditor.ui \

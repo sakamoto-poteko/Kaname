@@ -22,15 +22,18 @@
 #define KANAME_VERSION "2.0.0"
 #define KANAME_COPYRIGHT "Copyright (c) 2016, Afa.L Cheng <afa@afa.moe>"
 
-#include <QMap>
+#include <QHash>
+#include <QUuid>
 
 class LabelDataFormatInterface;
+class LabelingObjectDefinitionInterface;
 
 class KanamePlugins
 {
 public:
     // extension, object
-    QMap<QString, LabelDataFormatInterface *> LabelDataFormatInterfaces;
+    QHash<QUuid, LabelDataFormatInterface *> LabelDataFormatInterfaces;
+    QHash<QUuid, LabelingObjectDefinitionInterface *> LabelObjectDefinitionInterfaces;
 };
 
 extern KanamePlugins __kanamePlugins;

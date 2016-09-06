@@ -37,7 +37,7 @@ public:
     void clear();
 
 private:
-    quint64 _cacheSize;
+    qint64 _cacheSize;
     QMap<QString, QImage> _imageCache;
     QQueue<QString> _keys;
 };
