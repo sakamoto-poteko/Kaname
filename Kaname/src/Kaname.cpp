@@ -59,6 +59,10 @@ Kaname::Kaname(QWidget *parent) :
     connect(ui->action_ZoomOut, &QAction::triggered,    ui->labelingView, &LabelingGraphicsView::scaleDown2x);
     connect(ui->action_ZoomReset,   &QAction::triggered,ui->labelingView, &LabelingGraphicsView::scaleFitWindow);
     connect(ui->action_DeleteSelected,  &QAction::triggered,ui->labelingView,   &LabelingGraphicsView::deleteSelected);
+    connect(ui->action_GrowHorizentally,&QAction::triggered,ui->labelingView,   &LabelingGraphicsView::growSelectedBoxHorizentally);
+    connect(ui->action_ShrinkHorizentally,&QAction::triggered,ui->labelingView, &LabelingGraphicsView::shrinkSelectedBoxHorizentally);
+    connect(ui->action_GrowVertically,  &QAction::triggered,ui->labelingView,   &LabelingGraphicsView::growSelectedBoxVertically);
+    connect(ui->action_ShrinkVertically,&QAction::triggered,ui->labelingView,   &LabelingGraphicsView::shrinkSelectedBoxVertically);
     connect(_imageSource,   &AbstractImageSource::sourceStatusChanged,  this,   &Kaname::imageLoadStatusChanged);
     connect(_imageSource,   &AbstractImageSource::sourceChanged,        this,   &Kaname::imageSourceChanged);
 

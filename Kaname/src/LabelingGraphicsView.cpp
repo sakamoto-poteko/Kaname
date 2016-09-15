@@ -113,6 +113,38 @@ void LabelingGraphicsView::moveSelectedBoxRight()
     _selectedBoxItem->setTopLeft(newPos);
 }
 
+void LabelingGraphicsView::growSelectedBoxHorizentally()
+{
+    if (!_selectedBoxItem)
+        return;
+
+    _selectedBoxItem->growBorder(1);
+}
+
+void LabelingGraphicsView::growSelectedBoxVertically()
+{
+    if (!_selectedBoxItem)
+        return;
+
+    _selectedBoxItem->growBorder(0);
+}
+
+void LabelingGraphicsView::shrinkSelectedBoxHorizentally()
+{
+    if (!_selectedBoxItem)
+        return;
+
+    _selectedBoxItem->shrinkBorder(1);
+}
+
+void LabelingGraphicsView::shrinkSelectedBoxVertically()
+{
+    if (!_selectedBoxItem)
+        return;
+
+    _selectedBoxItem->shrinkBorder(0);
+}
+
 void LabelingGraphicsView::deleteSelected()
 {
     if (!_selectedBoxItem || !scene())

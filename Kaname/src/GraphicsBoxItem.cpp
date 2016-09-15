@@ -111,6 +111,52 @@ void GraphicsBoxItem::setTopLeft(const QPointF &topLeft)
     setPos(newPos);
 }
 
+void GraphicsBoxItem::growBox()
+{
+    auto center = _center;
+    qreal sw = scene()->width();
+    qreal sh = scene()->height();
+
+    throw("not implemented");
+}
+
+void GraphicsBoxItem::shrinkBox()
+{
+
+}
+
+void GraphicsBoxItem::growBorder(int orientation)
+{
+    auto center = _center;
+
+    if (orientation) {
+        if (_width + 2. > scene()->width())
+            return;
+        setSize(QPointF(_width + 2., _height));
+    } else {
+        if (_height + 2. > scene()->height())
+            return;
+        setSize(QPointF(_width, _height + 2.));
+    }
+//    setCenter(center);
+}
+
+void GraphicsBoxItem::shrinkBorder(int orientation)
+{
+    auto center = _center;
+
+    if (orientation) {
+        if (_width < 2.)
+            return;
+        setSize(QPointF(_width - 2., _height));
+    } else {
+        if (_height < 2.)
+            return;
+        setSize(QPointF(_width, _height - 2.));
+    }
+//    setCenter(center);
+}
+
 LabelingBox GraphicsBoxItem::toLabelingBox(const GraphicsBoxItem *item)
 {
     LabelingBox b;
@@ -162,5 +208,7 @@ void GraphicsBoxItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 }
 
 const qreal GraphicsBoxItem::OVERLAP_THRESHOLD = 5.;
+
+
 
 

@@ -253,6 +253,11 @@ p, li { white-space: pre-wrap; }
    <addaction name="action_MoveDown"/>
    <addaction name="separator"/>
    <addaction name="action_About"/>
+   <addaction name="separator"/>
+   <addaction name="action_GrowHorizentally"/>
+   <addaction name="action_GrowVertically"/>
+   <addaction name="action_ShrinkHorizentally"/>
+   <addaction name="action_ShrinkVertically"/>
   </widget>
   <action name="action_AddImages">
    <property name="icon">
@@ -564,6 +569,38 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>E</string>
+   </property>
+  </action>
+  <action name="action_GrowHorizentally">
+   <property name="text">
+    <string>Grow Horizentally</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+A</string>
+   </property>
+  </action>
+  <action name="action_GrowVertically">
+   <property name="text">
+    <string>Grow Vertically</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+W</string>
+   </property>
+  </action>
+  <action name="action_ShrinkHorizentally">
+   <property name="text">
+    <string>Shrink Horizentally</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
+  </action>
+  <action name="action_ShrinkVertically">
+   <property name="text">
+    <string>Shrink Vertically</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>

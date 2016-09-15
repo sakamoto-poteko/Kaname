@@ -146,6 +146,18 @@ public:
         _objName = objName;
     }
 
+    enum Border {
+        BorderLeft,
+        BorderBottom,
+        BorderRight,
+        BorderTop
+    };
+
+    void growBox();
+    void shrinkBox();
+    void growBorder(int orientation);
+    void shrinkBorder(int orientation);
+
     static LabelingBox toLabelingBox(const GraphicsBoxItem *item);
     static GraphicsBoxItem *fromLableingBox(const LabelingBox &box);
 
@@ -170,5 +182,7 @@ protected:
 private:
     GraphicsBoxItem() : _width(0), _height(0), _aspectRatioSet(false), _selected(false) {}
 };
+
+
 
 #endif // GRAPHICSBOXITEM_H

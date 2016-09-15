@@ -89,6 +89,10 @@ public slots:
     void moveSelectedBoxUp();
     void moveSelectedBoxLeft();
     void moveSelectedBoxRight();
+    void growSelectedBoxHorizentally();
+    void growSelectedBoxVertically();
+    void shrinkSelectedBoxHorizentally();
+    void shrinkSelectedBoxVertically();
     void deleteSelected();
     void setObjectInfo(const ObjectInfo &info);
 
