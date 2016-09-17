@@ -26,5 +26,9 @@
         <file>zoom1x.png</file>
         <file>open.png</file>
         <file>delete.png</file>
+        <file>grow_h.png</file>
+        <file>grow_v.png</file>
+        <file>shrink_h.png</file>
+        <file>shrink_v.png</file>
     </qresource>
 </RCC>

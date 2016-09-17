@@ -218,12 +218,20 @@ void LabelingGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         _currentBoxItem->normalize();
         if ((_currentBoxItem->width() < _boxThreshold ||
                 _currentBoxItem->height() < _boxThreshold) &&
-                event->modifiers() != Qt::ShiftModifier) {
+                event->modifiers() != Qt::ShiftModifier) {  // Smaller than threshold
             scene()->removeItem(_currentBoxItem);
             delete _currentBoxItem;
         } else {
-            if (_currentBoxItem != _selectedBoxItem)
-                _currentBoxItem->unselect();
+            if (_currentBoxItem != _selectedBoxItem) {   // Not current selection
+//                _currentBoxItem->unselect();
+                if (_currentBoxItem) {
+                    if (_selectedBoxItem)
+                        _selectedBoxItem->unselect();
+                    _selectedBoxItem = _currentBoxItem;
+                    _selectedBoxItem->select();
+                }
+            } else {
+            }
         }
 
         _currentBoxItem = 0;

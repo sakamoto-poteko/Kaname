@@ -62,6 +62,11 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei UI</family>
+              </font>
+             </property>
              <property name="readOnly">
               <bool>true</bool>
              </property>
@@ -82,6 +87,11 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei UI</family>
+              </font>
+             </property>
              <property name="readOnly">
               <bool>true</bool>
              </property>
@@ -94,6 +104,11 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei UI</family>
+              </font>
              </property>
              <property name="autoFillBackground">
               <bool>false</bool>
@@ -134,6 +149,11 @@ color: rgb(255, 255, 255);</string>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
              <widget class="QScrollArea" name="scrollArea">
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="widgetResizable">
                <bool>true</bool>
               </property>
@@ -143,7 +163,7 @@ color: rgb(255, 255, 255);</string>
                  <x>0</x>
                  <y>0</y>
                  <width>254</width>
-                 <height>154</height>
+                 <height>162</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="objectsVLayout"/>
@@ -178,9 +198,9 @@ color: rgb(255, 255, 255);</string>
                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.875pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8.25pt;&quot;&gt;Load Object Info: Ctrl + E&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8.25pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Load Object Info: Ctrl + E&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;-&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Add Images: Ctrl + A&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Clear Images: Ctrl + W&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
@@ -201,6 +221,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom Out: Ctrl + X&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom Reset: Ctrl + C&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom to Actual Pixels: Ctrl + V&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Horizontally: Ctrl+Shift+A/D&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Vertically: Ctrl+Shift+W/S&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;About: ?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
@@ -252,12 +275,12 @@ p, li { white-space: pre-wrap; }
    <addaction name="action_MoveRight"/>
    <addaction name="action_MoveDown"/>
    <addaction name="separator"/>
-   <addaction name="action_About"/>
-   <addaction name="separator"/>
-   <addaction name="action_GrowHorizentally"/>
+   <addaction name="action_GrowHorizontally"/>
    <addaction name="action_GrowVertically"/>
-   <addaction name="action_ShrinkHorizentally"/>
+   <addaction name="action_ShrinkHorizontally"/>
    <addaction name="action_ShrinkVertically"/>
+   <addaction name="separator"/>
+   <addaction name="action_About"/>
   </widget>
   <action name="action_AddImages">
    <property name="icon">
@@ -571,15 +594,26 @@ p, li { white-space: pre-wrap; }
     <string>E</string>
    </property>
   </action>
-  <action name="action_GrowHorizentally">
+  <action name="action_GrowHorizontally">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/grow_h.png</normaloff>:/icon/grow_h.png</iconset>
+   </property>
    <property name="text">
-    <string>Grow Horizentally</string>
+    <string>Grow Horizontally</string>
+   </property>
+   <property name="toolTip">
+    <string>Grow Horizontally</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+A</string>
    </property>
   </action>
   <action name="action_GrowVertically">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/grow_v.png</normaloff>:/icon/grow_v.png</iconset>
+   </property>
    <property name="text">
     <string>Grow Vertically</string>
    </property>
@@ -587,15 +621,26 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+Shift+W</string>
    </property>
   </action>
-  <action name="action_ShrinkHorizentally">
+  <action name="action_ShrinkHorizontally">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/shrink_h.png</normaloff>:/icon/shrink_h.png</iconset>
+   </property>
    <property name="text">
-    <string>Shrink Horizentally</string>
+    <string>Shrink Horizontally</string>
+   </property>
+   <property name="toolTip">
+    <string>Shrink Horizontally</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+D</string>
    </property>
   </action>
   <action name="action_ShrinkVertically">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icon/shrink_v.png</normaloff>:/icon/shrink_v.png</iconset>
+   </property>
    <property name="text">
     <string>Shrink Vertically</string>
    </property>

@@ -48,6 +48,7 @@ void GraphicsBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     Q_UNUSED(option);
     Q_UNUSED(widget);
     QRect rect(0, 0, _width, _height);
+    scene()->sceneRect();
     painter->setPen(QPen(_selected ? Qt::white : _color, 2));
     painter->drawRect(rect);
     QPoint center(rect.center());
