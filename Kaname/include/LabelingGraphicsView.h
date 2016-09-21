@@ -81,6 +81,7 @@ public:
     }
 
 public slots:
+    void clear();
     void scaleUp2x();
     void scaleDown2x();
     void scaleImgSize();

@@ -42,6 +42,15 @@ LabelingGraphicsView::LabelingGraphicsView(QWidget *parent) :
     setMouseTracking(true);
 }
 
+void LabelingGraphicsView::clear()
+{
+    clearSelection();
+    if (_currentBoxItem) {
+        _currentBoxItem->unselect();
+        _currentBoxItem = 0;
+    }
+}
+
 void LabelingGraphicsView::scaleUp2x()
 {
     scale(2, 2);

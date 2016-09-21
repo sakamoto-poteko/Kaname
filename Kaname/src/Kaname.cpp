@@ -235,6 +235,7 @@ void Kaname::getAndRenderImage()
     QString fullname = _imageSource->getImageName();
     QString shortname(QFileInfo(fullname).fileName());
 
+    ui->labelingView->clear();
     if (_labelingScene)
         delete _labelingScene;
     _labelingScene = new LabelingScene(img, shortname, _boxManager, this);
