@@ -24,6 +24,8 @@
 #include "GraphicsBoxItem.h"
 #include "ObjectInfo.h"
 
+class LabelingScene;
+
 class LabelingGraphicsView : public QGraphicsView
 {
 public:
@@ -103,6 +105,8 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void wheelEvent(QWheelEvent *event);
 
+    LabelingScene *labelingScene();
+
     enum DragState {
         NotDragging,
         NewBox,
@@ -128,6 +132,7 @@ private:
     QColor  _currentBoxColor;
     bool    _currentAspectRatioSet;
     double  _currentAspectRatio;
+    int     _selectedIdx;
 };
 
 #endif // LABELINGGRAPHICSVIEW_H

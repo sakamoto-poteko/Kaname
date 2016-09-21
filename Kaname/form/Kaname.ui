@@ -222,8 +222,8 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom Reset: Ctrl + C&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom to Actual Pixels: Ctrl + V&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Horizontally: Ctrl+Shift+A/D&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Vertically: Ctrl+Shift+W/S&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Horizontally: Shift+Q/E&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Vertically: Shift+Z/C&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;About: ?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
@@ -606,7 +606,7 @@ p, li { white-space: pre-wrap; }
     <string>Grow Horizontally</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+A</string>
+    <string>Shift+Q</string>
    </property>
   </action>
   <action name="action_GrowVertically">
@@ -618,7 +618,7 @@ p, li { white-space: pre-wrap; }
     <string>Grow Vertically</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+W</string>
+    <string>Shift+Z</string>
    </property>
   </action>
   <action name="action_ShrinkHorizontally">
@@ -633,7 +633,7 @@ p, li { white-space: pre-wrap; }
     <string>Shrink Horizontally</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+D</string>
+    <string>Shift+E</string>
    </property>
   </action>
   <action name="action_ShrinkVertically">
@@ -645,7 +645,7 @@ p, li { white-space: pre-wrap; }
     <string>Shrink Vertically</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string>Shift+C</string>
    </property>
   </action>
  </widget>

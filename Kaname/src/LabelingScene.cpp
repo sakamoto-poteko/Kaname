@@ -33,6 +33,28 @@ LabelingScene::~LabelingScene()
 {
 }
 
+QList<GraphicsBoxItem *> LabelingScene::boxItems()
+{
+    auto is = items();
+
+    QList<GraphicsBoxItem *> bis;
+    foreach (QGraphicsItem *gi, is) {
+        GraphicsBoxItem *gbi = dynamic_cast<GraphicsBoxItem *>(gi);
+        if (!gbi)
+            continue;
+        else
+            bis.append(gbi);
+    }
+
+    qSort(bis.begin(), bis.end(), [](GraphicsBoxItem *a, GraphicsBoxItem *b) { return a->id() < b->id(); });
+    return bis;
+}
+
+uint32_t LabelingScene::nextId()
+{
+    return ++_nextId;
+}
+
 void LabelingScene::syncToBoxManager()
 {
     LabelingBoxList list;
@@ -50,7 +72,7 @@ void LabelingScene::syncFromBoxManager()
     clear();
     auto list = (*_boxMan)[_imgName];
     foreach (auto lb, list) {
-        auto *i = GraphicsBoxItem::fromLableingBox(lb);
+        auto *i = GraphicsBoxItem::fromLableingBox(lb, nextId());
         addItem(i);
     }
 }
@@ -62,4 +84,6 @@ void LabelingScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->drawImage(rect, _backgroundImage, rect);
 }
+
+uint32_t LabelingScene::_nextId = 0;
 

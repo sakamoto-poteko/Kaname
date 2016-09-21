@@ -23,6 +23,8 @@
 
 #include "BoxManager.h"
 
+class GraphicsBoxItem;
+
 class LabelingScene : public QGraphicsScene
 {
 public:
@@ -61,6 +63,9 @@ public:
         _boxMan = boxMan;
     }
 
+    QList<GraphicsBoxItem *> boxItems();
+    uint32_t nextId();
+
 public slots:
     void syncToBoxManager();
     void syncFromBoxManager();
@@ -73,6 +78,7 @@ protected:
     QImage _backgroundImage;
     QString _imgName;
     BoxManager *_boxMan;
+    static uint32_t _nextId;
 };
 
 #endif // LABELINGSCENE_H

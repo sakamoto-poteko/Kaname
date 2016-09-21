@@ -25,10 +25,10 @@
 
 #include <QDebug>
 
-GraphicsBoxItem::GraphicsBoxItem(const QString &objectName, const QColor &color) :
+GraphicsBoxItem::GraphicsBoxItem(const QString &objectName, const QColor &color, quint32 id) :
     _width(0), _height(0), _color(color), _aspectRatio(0.),
     _aspectRatioSet(false), _selected(false),
-    _objName(objectName)
+    _objName(objectName), _id(id)
 {
 }
 
@@ -48,17 +48,16 @@ void GraphicsBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     Q_UNUSED(option);
     Q_UNUSED(widget);
     QRect rect(0, 0, _width, _height);
-    scene()->sceneRect();
-    painter->setPen(QPen(_selected ? Qt::white : _color, 2));
+    painter->setPen(QPen(_selected ? Qt::white : _color, _selected ? 4 : 2));
     painter->drawRect(rect);
     QPoint center(rect.center());
     painter->setBrush(_selected ? Qt::white : _color);
     painter->drawEllipse(center, 2, 2);
 }
 
-GraphicsBoxItem *GraphicsBoxItem::clone()
+GraphicsBoxItem *GraphicsBoxItem::clone(uint32_t id)
 {
-    GraphicsBoxItem *cloned = new GraphicsBoxItem(_objName, _color);
+    GraphicsBoxItem *cloned = new GraphicsBoxItem(_objName, _color, id);
     cloned->_height = _height;
     cloned->_width  = _width;
     cloned->_aspectRatio = _aspectRatio;
@@ -169,9 +168,9 @@ LabelingBox GraphicsBoxItem::toLabelingBox(const GraphicsBoxItem *item)
     return b;
 }
 
-GraphicsBoxItem *GraphicsBoxItem::fromLableingBox(const LabelingBox &box)
+GraphicsBoxItem *GraphicsBoxItem::fromLableingBox(const LabelingBox &box, uint32_t id)
 {
-    GraphicsBoxItem *item = new GraphicsBoxItem(box.objName, box.color);
+    GraphicsBoxItem *item = new GraphicsBoxItem(box.objName, box.color, id);
     item->_aspectRatio = box.aspectRatio;
     item->_aspectRatioSet = box.aspectRatioSet;
     item->_color = box.color;

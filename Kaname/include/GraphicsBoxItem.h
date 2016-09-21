@@ -26,11 +26,11 @@
 class GraphicsBoxItem : public QGraphicsItem
 {
 public:
-    GraphicsBoxItem(const QString &objectName, const QColor &color);
+    GraphicsBoxItem(const QString &objectName, const QColor &color, quint32 id);
 
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual GraphicsBoxItem *clone();
+    virtual GraphicsBoxItem *clone(uint32_t id);
     void setCenter(const QPointF &center);
     void setTopLeft(const QPointF &topLeft);
 
@@ -120,14 +120,14 @@ public:
     void select()
     {
         _selected = true;
-        setZValue(100);
+        setZValue(99999);
         setAcceptHoverEvents(true);
     }
 
     void unselect()
     {
         _selected = false;
-        setZValue(0);
+        setZValue(_id);
         setAcceptHoverEvents(false);
     }
 
@@ -146,6 +146,8 @@ public:
         _objName = objName;
     }
 
+    quint32 id() const { return _id; }
+
     enum Border {
         BorderLeft,
         BorderBottom,
@@ -159,7 +161,8 @@ public:
     void shrinkBorder(int orientation);
 
     static LabelingBox toLabelingBox(const GraphicsBoxItem *item);
-    static GraphicsBoxItem *fromLableingBox(const LabelingBox &box);
+    static GraphicsBoxItem *fromLableingBox(const LabelingBox &box, uint32_t id);
+
 
 protected:
     virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
@@ -176,6 +179,7 @@ protected:
     QPointF _center;
     bool _selected;
     QString _objName;
+    quint32 _id;
 
     static const qreal OVERLAP_THRESHOLD;
 

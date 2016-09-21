@@ -114,6 +114,10 @@ void Kaname::setButtonStatus(bool loaded)
     ui->action_ZoomIn->setEnabled(loaded);
     ui->action_ZoomOut->setEnabled(loaded);
     ui->action_ZoomReset->setEnabled(loaded);
+    ui->action_ShrinkHorizontally->setEnabled(loaded);
+    ui->action_ShrinkVertically->setEnabled(loaded);
+    ui->action_GrowHorizontally->setEnabled(loaded);
+    ui->action_GrowVertically->setEnabled(loaded);
 }
 
 void Kaname::imageLoadStatusChanged(bool loaded)

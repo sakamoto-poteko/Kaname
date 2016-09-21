@@ -21,6 +21,7 @@
 #include <QGLWidget>
 
 #include "LabelingGraphicsView.h"
+#include "LabelingScene.h"
 
 #include <QDebug>
 
@@ -29,7 +30,8 @@ LabelingGraphicsView::LabelingGraphicsView(QWidget *parent) :
     _currentBoxItem(0), _selectedBoxItem(0),
     _numScheduledScalings(0), _boxThreshold(50),
     _currentBoxObjName("unknown"), _currentBoxColor(Qt::red),
-    _currentAspectRatioSet(false), _currentAspectRatio(0.)
+    _currentAspectRatioSet(false), _currentAspectRatio(0.),
+    _selectedIdx(-1)
 {
     QGLFormat f;
     f.setSampleBuffers(true);
@@ -62,7 +64,18 @@ void LabelingGraphicsView::scaleFitWindow()
 
 void LabelingGraphicsView::selectNextObject()
 {
-    // NOT IMPLEMENTED
+    auto bi = labelingScene()->boxItems();
+    ++_selectedIdx;
+
+    if (_selectedIdx >= bi.size()) {
+        _selectedIdx = -1;
+        clearSelection();
+    } else {
+        if (_selectedBoxItem)
+            _selectedBoxItem->unselect();
+        _selectedBoxItem = bi[_selectedIdx];
+        _selectedBoxItem->select();
+    }
 }
 
 void LabelingGraphicsView::clearSelection()
@@ -71,6 +84,7 @@ void LabelingGraphicsView::clearSelection()
         _selectedBoxItem->unselect();
         _selectedBoxItem = 0;
     }
+    _selectedIdx = -1;
 }
 
 void LabelingGraphicsView::moveSelectedBoxDown()
@@ -179,7 +193,7 @@ void LabelingGraphicsView::mousePressEvent(QMouseEvent *event)
     if (event->modifiers() == Qt::ControlModifier && event->button() == Qt::LeftButton) {
         if (pressedItem) {
             _dragState = CopyingBox;
-            _currentBoxItem = pressedItem->clone();
+            _currentBoxItem = pressedItem->clone(labelingScene()->nextId());
             _currentBoxItem->setCenter(mpos);
             _currentBoxItem->select();
             scene()->addItem(_currentBoxItem);
@@ -197,7 +211,7 @@ void LabelingGraphicsView::mousePressEvent(QMouseEvent *event)
             return;
         } else {
             _dragState = NewBox;
-            _currentBoxItem = new GraphicsBoxItem(currentBoxObjName(), currentBoxColor());
+            _currentBoxItem = new GraphicsBoxItem(currentBoxObjName(), currentBoxColor(), labelingScene()->nextId());
             if (_currentAspectRatioSet)
                 _currentBoxItem->setAspectRatio(_currentAspectRatio);
             _currentBoxItem->setPos(mpos);
@@ -337,6 +351,11 @@ void LabelingGraphicsView::wheelEvent(QWheelEvent *event)
     } else {
         QGraphicsView::wheelEvent(event);
     }
+}
+
+LabelingScene *LabelingGraphicsView::labelingScene()
+{
+    return static_cast<LabelingScene *>(scene());
 }
 
 
