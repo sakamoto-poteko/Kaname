@@ -167,6 +167,11 @@ void Kaname::clearObjectSelectionButtons()
 
 void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
 {
+    foreach (ObjectSelectionButton *action, _objSelectionButtons) {
+        delete action;
+    }
+    _objSelectionButtons.clear();
+
     for (int i = 0; i < objs.size(); ++i) {
         ObjectInfo info = objs.at(i);
         ObjectSelectionButton *btn = new ObjectSelectionButton(info, ui->objectsList);
