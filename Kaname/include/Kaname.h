@@ -67,6 +67,7 @@ private:
     LabelingScene *_labelingScene;
     QGraphicsScene *_nullScene;
     QList<ObjectSelectionButton *> _objSelectionButtons;
+    QList<ObjectSelectionButton *> _changeCurrentSelectionObjectButtons;
     QHash<QString, QMatrix>   _imgTransformationMap;
 
     void updatePermStatusText(const QString &status);

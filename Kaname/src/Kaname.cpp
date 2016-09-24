@@ -162,7 +162,11 @@ void Kaname::clearObjectSelectionButtons()
     foreach (ObjectSelectionButton *btn, _objSelectionButtons) {
         delete btn;
     }
+    foreach (QAbstractButton *btn, _changeCurrentSelectionObjectButtons) {
+        delete btn;
+    }
     _objSelectionButtons.clear();
+    _changeCurrentSelectionObjectButtons.clear();
 }
 
 void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
@@ -170,7 +174,11 @@ void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
     foreach (ObjectSelectionButton *action, _objSelectionButtons) {
         delete action;
     }
+    foreach (QAbstractButton *btn, _changeCurrentSelectionObjectButtons) {
+        delete btn;
+    }
     _objSelectionButtons.clear();
+    _changeCurrentSelectionObjectButtons.clear();
 
     for (int i = 0; i < objs.size(); ++i) {
         ObjectInfo info = objs.at(i);
@@ -186,13 +194,26 @@ void Kaname::populateObjectSelectionButtons(const QList<ObjectInfo> &objs)
             ui->leNextObj->setText(info.objectName);
         });
 
+        ObjectSelectionButton *sbtn = new ObjectSelectionButton(info, ui->objectsList);
+        connect(sbtn, &ObjectSelectionButton::selected, ui->labelingView, &LabelingGraphicsView::setCurrentObjectSelection);
+
         ui->objectsVLayout->addWidget(btn);
         _objSelectionButtons.append(btn);
+        _changeCurrentSelectionObjectButtons.append(sbtn);
 
-        if (i < 9)
+        if (i < 9) {
             btn->setShortcut(QKeySequence(Qt::Key_1 + i));
-        if (i == 9)
+            sbtn->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_1 + i));
+            sbtn->showMinimized();
+            sbtn->setFixedSize(0, 0);
+        }
+
+        if (i == 9) {
             btn->setShortcut(QKeySequence(Qt::Key_0));
+            sbtn->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_0));
+            sbtn->showMinimized();
+            sbtn->setFixedSize(0, 0);
+        }
     }
     if (!_objSelectionButtons.empty()) {
         _objSelectionButtons.first()->click();

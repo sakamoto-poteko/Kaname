@@ -186,6 +186,16 @@ void LabelingGraphicsView::setObjectInfo(const ObjectInfo &info)
     setCurrentAspectRatio(info.aspectRatio);
 }
 
+void LabelingGraphicsView::setCurrentObjectSelection(const ObjectInfo &info)
+{
+    if (_selectedBoxItem) {
+        _selectedBoxItem->setObject(info.objectName, info.objectColor);
+        if (info.aspectRatioSet)
+            _selectedBoxItem->setAspectRatio(info.aspectRatio);
+        _selectedBoxItem->update();
+    }
+}
+
 void LabelingGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if (!scene())

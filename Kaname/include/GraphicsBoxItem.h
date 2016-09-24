@@ -130,6 +130,11 @@ public:
         setZValue(_id);
         setAcceptHoverEvents(false);
     }
+    void setObject(const QString &objname, const QColor &color)
+    {
+        _objName = objname;
+        _color = color;
+    }
 
     QRectF rect() const
     {

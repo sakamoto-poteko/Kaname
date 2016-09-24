@@ -98,6 +98,7 @@ public slots:
     void shrinkSelectedBoxVertically();
     void deleteSelected();
     void setObjectInfo(const ObjectInfo &info);
+    void setCurrentObjectSelection(const ObjectInfo &info);
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
