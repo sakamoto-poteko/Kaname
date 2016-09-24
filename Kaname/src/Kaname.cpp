@@ -240,7 +240,11 @@ void Kaname::getAndRenderImage()
         delete _labelingScene;
     _labelingScene = new LabelingScene(img, shortname, _boxManager, this);
     ui->labelingView->setScene(_labelingScene);
-    ui->labelingView->scaleFitWindow();
+
+    if (_imgTransformationMap.contains(shortname))
+        ui->labelingView->setMatrix(_imgTransformationMap.value(shortname));
+    else
+        ui->labelingView->scaleFitWindow();
 
     ui->leImageName->setText(shortname);
     ui->leImageSize->setText(QString("%1 x %2").
@@ -260,6 +264,11 @@ void Kaname::getAndRenderImage()
 
 void Kaname::on_action_NextImage_triggered()
 {
+    QString shortname(QFileInfo(_imageSource->getImageName()).fileName());
+    if (!shortname.isEmpty()) {
+        _imgTransformationMap[shortname] = ui->labelingView->matrix();
+    }
+
     if (_imageSource->moveNext()) {
         getAndRenderImage();
     } else {
@@ -322,6 +331,7 @@ void Kaname::on_action_About_triggered()
 
 void Kaname::on_action_ClearImages_triggered()
 {
+    _imgTransformationMap.clear();
     ui->leNextObj->setStyleSheet("");
     _boxManager->clear();
     ui->labelingView->setScene(_nullScene);

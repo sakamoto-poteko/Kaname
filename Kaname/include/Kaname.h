@@ -67,6 +67,7 @@ private:
     LabelingScene *_labelingScene;
     QGraphicsScene *_nullScene;
     QList<ObjectSelectionButton *> _objSelectionButtons;
+    QHash<QString, QMatrix>   _imgTransformationMap;
 
     void updatePermStatusText(const QString &status);
     void updateTempStatusText(const QString &status, int timeout = 2000);
