@@ -163,11 +163,18 @@ color: rgb(255, 255, 255);</string>
                  <x>0</x>
                  <y>0</y>
                  <width>254</width>
-                 <height>162</height>
+                 <height>139</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="objectsVLayout"/>
               </widget>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="cbAutoNext">
+              <property name="text">
+               <string>Proceed to next box &amp;automatically</string>
+              </property>
              </widget>
             </item>
            </layout>

@@ -35,6 +35,8 @@ public:
         return gray > 130 ? Qt::black : Qt::white;
     }
 
+    ObjectInfo getObjInfo() const { return _objInfo; }
+
 signals:
     void selected(ObjectInfo objInfo);
 

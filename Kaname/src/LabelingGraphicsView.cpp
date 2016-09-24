@@ -263,6 +263,7 @@ void LabelingGraphicsView::mouseReleaseEvent(QMouseEvent *event)
                     _selectedBoxItem = _currentBoxItem;
                     _selectedBoxItem->select();
                 }
+                emit newBoxDrawn();
             } else {
             }
         }

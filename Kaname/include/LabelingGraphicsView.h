@@ -28,6 +28,7 @@ class LabelingScene;
 
 class LabelingGraphicsView : public QGraphicsView
 {
+    Q_OBJECT
 public:
     LabelingGraphicsView(QWidget *parent = 0);
 
@@ -99,6 +100,9 @@ public slots:
     void deleteSelected();
     void setObjectInfo(const ObjectInfo &info);
     void setCurrentObjectSelection(const ObjectInfo &info);
+
+signals:
+    void newBoxDrawn();
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);

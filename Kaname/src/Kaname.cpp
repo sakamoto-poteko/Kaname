@@ -66,7 +66,14 @@ Kaname::Kaname(QWidget *parent) :
     connect(_imageSource,   &AbstractImageSource::sourceStatusChanged,  this,   &Kaname::imageLoadStatusChanged);
     connect(_imageSource,   &AbstractImageSource::sourceChanged,        this,   &Kaname::imageSourceChanged);
 
-
+    connect(ui->cbAutoNext, &QCheckBox::toggled, [this](bool checked) {
+        if (checked) {
+            connect(ui->labelingView, SIGNAL(newBoxDrawn()), this, SLOT(selectedNextObject()));
+        } else {
+            disconnect(ui->labelingView, SIGNAL(newBoxDrawn()), this, SLOT(selectedNextObject()));
+        }
+    });
+    ui->cbAutoNext->toggle();
     setButtonStatus(false);
 //    setButtonStatus(true);
 
@@ -448,4 +455,25 @@ void Kaname::on_action_EditObjectNames_triggered()
 
     ObjectInfoList objInfoList = opener->open(filename);
     populateObjectSelectionButtons(objInfoList);
+}
+
+void Kaname::selectedNextObject()
+{
+    QString objname = ui->leNextObj->text();
+
+    int current = -1;
+
+    for (int i = 0; i < _objSelectionButtons.size(); ++i) {
+        auto btn = _objSelectionButtons.at(i);
+
+        if (btn->getObjInfo().objectName == objname) {
+            current = i;
+            break;
+        }
+    }
+
+    int next = ++current;
+    if (next < _objSelectionButtons.size()) {
+        _objSelectionButtons.at(next)->click();
+    }
 }

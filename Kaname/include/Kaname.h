@@ -58,6 +58,8 @@ private slots:
     void on_action_Open_triggered();
     void on_action_EditObjectNames_triggered();
 
+    void selectedNextObject();
+
 private:
     Ui::Kaname *ui;
     AbstractImageSource *_imageSource;
