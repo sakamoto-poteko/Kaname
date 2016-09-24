@@ -4,15 +4,13 @@ Kaname is a labeling tool. Currently only image is supported. Video support is p
 
 At this time, to label a video, you'll need to use our `Ixtractor` tool converting video to images. 
 
-Support for opening existing labeling data is also coming soon.
-
 ## Build
 This is a regular Qt subdir project. Execute `qmake` and build it with your favourite compiler.
 
 ### Tested Platforms
 
-* Windows 8.1 64-bit, Qt 5.7.0/MinGW-W64 5.3.0/shared
-* Windows 8.1 64-bit, Qt 5.7.0/Visual Studio 2015/shared
+* Windows 8.1 64-bit, Qt 5.7.0/MinGW-W64 5.3.0/shared/32-bit
+* Windows 8.1 64-bit, Qt 5.7.0/Visual Studio 2015/shared/64-bit
 
 ## Subdirs
 
@@ -22,8 +20,11 @@ This is the core labeling application.
 ### LabelJson
 This is a labeling data format plugin.
 
+### ObjJson
+This is a object definition format plugin.
+
 ## Use of plugins
-Create a folder `plugins` under app exe folder, put our (and your) plugins into the folder. The app will automatically load these plugins when starts.
+Copy plugins to the app exe folder. The app will automatically load these plugins when starts.
 
 ## License
 It seems that GPLv3 is the only choice. To be honest, I dislike this license. The reason is that I'm statically linking with Qt lib, 
@@ -44,7 +45,7 @@ Copyright (C) 2016  Afa.L Cheng <afa@afa.moe>
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-```  
+```
 
 ## Kaname
 ![千鳥 かなめ](Kaname.png)
