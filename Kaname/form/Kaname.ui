@@ -163,7 +163,7 @@ color: rgb(255, 255, 255);</string>
                  <x>0</x>
                  <y>0</y>
                  <width>254</width>
-                 <height>139</height>
+                 <height>167</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="objectsVLayout"/>
@@ -295,6 +295,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>&amp;Add Image(s)</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Image(s)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>

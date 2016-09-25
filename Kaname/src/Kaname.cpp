@@ -75,6 +75,11 @@ Kaname::Kaname(QWidget *parent) :
     });
     ui->cbAutoNext->toggle();
     setButtonStatus(false);
+
+    foreach (QAction *action, ui->toolBar->actions()) {
+        action->setToolTip(QString("%1 (%2)").arg(action->toolTip()).arg(action->shortcut().toString()));
+    }
+
 //    setButtonStatus(true);
 
 //    ObjectInfo oi, oj;
