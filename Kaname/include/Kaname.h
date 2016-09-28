@@ -25,6 +25,7 @@
 #include "ObjectSelectionButton.h"
 
 class AbstractImageSource;
+class LabelDataFormatInterface;
 
 namespace Ui {
 class Kaname;
@@ -76,6 +77,11 @@ private:
     void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
     void setButtonStatus(bool loaded);
+    QPair<QString, LabelDataFormatInterface *> getSaver(const QString &caption);
+
+    bool                        _autoSave;
+    QString                     _autoSavePath;
+    LabelDataFormatInterface    *_autoSaveSaver;
 };
 
 #endif // KANAME_H
