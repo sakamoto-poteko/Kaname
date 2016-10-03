@@ -77,6 +77,7 @@ private:
     void updateTempStatusText(const QString &status, int timeout = 2000);
     void getAndRenderImage();
     void setButtonStatus(bool loaded);
+    void clearImage();
     QPair<QString, LabelDataFormatInterface *> getSaver(const QString &caption);
 
     bool                        _autoSave;

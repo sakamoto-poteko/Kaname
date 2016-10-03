@@ -399,7 +399,7 @@ void Kaname::on_action_About_triggered()
     about.exec();
 }
 
-void Kaname::on_action_ClearImages_triggered()
+void Kaname::clearImage()
 {
     _imgTransformationMap.clear();
     ui->leNextObj->setStyleSheet("");
@@ -411,6 +411,11 @@ void Kaname::on_action_ClearImages_triggered()
     _autoSave = false;
     _autoSavePath.clear();
     _autoSaveSaver = 0;
+}
+
+void Kaname::on_action_ClearImages_triggered()
+{
+    clearImage();
 }
 
 void Kaname::on_action_Open_triggered()
@@ -450,6 +455,7 @@ void Kaname::on_action_Open_triggered()
         updateTempStatusText("Empty dataset");
         return;
     } else {
+        clearImage();
         QStringList imgFiles;
         QList<QString> imgs = boxMgr.keys();
         QDir dir = QFileInfo(filename).dir();
@@ -459,6 +465,9 @@ void Kaname::on_action_Open_triggered()
         _imageSource->addSources(imgFiles);
         *_boxManager = boxMgr;
         _imageSource->load();
+        _autoSave = true;
+        _autoSavePath = filename;
+        _autoSaveSaver = opener;
         updateTempStatusText(tr("Labeling data loaded."));
     }
 }
