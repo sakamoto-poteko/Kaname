@@ -32,7 +32,8 @@
 
 Kaname::Kaname(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::Kaname), _boxManager(0), _labelingScene(0)
+    ui(new Ui::Kaname), _boxManager(0), _labelingScene(0),
+    _autoSave(false), _autoSaveSaver(0)
 {
     ui->setupUi(this);
     ui->objectsVLayout->setAlignment(Qt::AlignTop);
@@ -138,6 +139,39 @@ void Kaname::setButtonStatus(bool loaded)
     ui->action_ShrinkVertically->setEnabled(loaded);
     ui->action_GrowHorizontally->setEnabled(loaded);
     ui->action_GrowVertically->setEnabled(loaded);
+}
+
+QPair<QString, LabelDataFormatInterface *> Kaname::getSaver(const QString &caption)
+{
+    QPair<QString, LabelDataFormatInterface *> ret;
+    QStringList supportedFormats;
+    QHash<QString, LabelDataFormatInterface *> formatMap;
+    foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
+        QString filter = QString("%1 (%2)").
+                arg(formatInterface->formatName()).
+                arg(formatInterface->formatExtension());
+        supportedFormats.append(filter);
+        formatMap[filter] = formatInterface;
+    }
+
+    QString selectedFilter;
+    QString filename = QFileDialog::getSaveFileName(this, caption, _lastDir,
+                                                    supportedFormats.join(QByteArray::fromStdString(";;")),
+                                                    &selectedFilter);
+    if (filename.isEmpty())
+        return ret;
+
+    QString ext = QFileInfo(filename).suffix();
+    if (ext.isEmpty()) { // No plugin loaded
+        QMessageBox::critical(this, tr("Unable to save"), tr("No format plugin loaded. Cannot save."));
+        return ret;
+    }
+
+    LabelDataFormatInterface *saver = formatMap[selectedFilter];
+
+    ret.first = filename;
+    ret.second = saver;
+    return ret;
 }
 
 void Kaname::imageLoadStatusChanged(bool loaded)
@@ -258,6 +292,14 @@ void Kaname::on_action_AddImages_triggered()
         updateTempStatusText(QString(tr("%1 files added.")).arg(files.size()), 2000);
         _imageSource->load();
     }
+
+    auto s = getSaver(tr("Autosave file (Cancel to disable autosave)"));
+    if (s.first.isEmpty() || !s.second)
+        return;
+
+    _autoSave = true;
+    _autoSavePath = s.first;
+    _autoSaveSaver = s.second;
 }
 
 void Kaname::updatePermStatusText(const QString &status)
@@ -305,6 +347,15 @@ void Kaname::getAndRenderImage()
 
 void Kaname::on_action_NextImage_triggered()
 {
+    // Autosave
+    if (_autoSave) {
+        Q_ASSERT(!_autoSavePath.isEmpty());
+        Q_ASSERT(_autoSaveSaver);
+        Q_ASSERT(_boxManager);
+
+        _autoSaveSaver->save(*_boxManager, _autoSavePath);
+    }
+
     QString shortname(QFileInfo(_imageSource->getImageName()).fileName());
     if (!shortname.isEmpty()) {
         _imgTransformationMap[shortname] = ui->labelingView->matrix();
@@ -328,35 +379,13 @@ void Kaname::on_action_PreviousImage_triggered()
 
 void Kaname::on_action_Save_triggered()
 {
-    QStringList supportedFormats;
-    QHash<QString, LabelDataFormatInterface *> formatMap;
-    foreach (auto formatInterface, __kanamePlugins.LabelDataFormatInterfaces) {
-        QString filter = QString("%1 (%2)").
-                arg(formatInterface->formatName()).
-                arg(formatInterface->formatExtension());
-        supportedFormats.append(filter);
-        formatMap[filter] = formatInterface;
-    }
-
-    QString selectedFilter;
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save"), _lastDir,
-                                                    supportedFormats.join(QByteArray::fromStdString(";;")),
-                                                    &selectedFilter);
-    if (filename.isEmpty())
+    auto s = getSaver(tr("Save"));
+    if (s.first.isEmpty() || !s.second)
         return;
 
-    QString ext = QFileInfo(filename).suffix();
-    if (ext.isEmpty()) { // No plugin loaded
-        QMessageBox::critical(this, tr("Unable to save"), tr("No format plugin loaded. Cannot save."));
-        return;
-    }
+    auto saver = s.second;
 
-    LabelDataFormatInterface *saver = formatMap[selectedFilter];
-    if (!saver) {
-        throw("Failed to retrieve saving plugin. This is a bug.");
-    }
-
-    bool saved = saver->save(*_boxManager, filename);
+    bool saved = saver->save(*_boxManager, s.first);
 
     if (saved)
         updateTempStatusText(tr("Labeling data saved."));
@@ -378,6 +407,10 @@ void Kaname::on_action_ClearImages_triggered()
     ui->labelingView->setScene(_nullScene);
     delete _labelingScene;
     _labelingScene = 0;
+
+    _autoSave = false;
+    _autoSavePath.clear();
+    _autoSaveSaver = 0;
 }
 
 void Kaname::on_action_Open_triggered()
