@@ -20,9 +20,51 @@
 #define MARKINGBOXMANAGER_H
 
 #include <QHash>
+#include <QVector>
 #include "LabelingBox.h"
 
 typedef QList<LabelingBox> LabelingBoxList;
-typedef QHash<QString, LabelingBoxList> BoxManager;
+
+class BoxManager : public QVector<QPair<QString, LabelingBoxList>>
+{
+public:
+    QList<QString> keys() const
+    {
+        QList<QString> ret;
+        for (auto pair : *this) {
+            ret.append(pair.first);
+        }
+
+        return ret;
+    }
+
+    LabelingBoxList &operator[](const QString &key)
+    {
+        for (int i = 0; i < size(); ++i) {
+            QPair<QString, LabelingBoxList> &pair = QVector<QPair<QString, LabelingBoxList>>::operator[](i);
+            if (pair.first == key) {
+                return pair.second;
+            }
+        }
+
+        append(QPair<QString, LabelingBoxList>(key, LabelingBoxList()));
+        return last().second;
+    }
+
+    LabelingBoxList const& operator[](const QString &key) const
+    {
+        for (int i = 0; i < size(); ++i) {
+            const QPair<QString, LabelingBoxList> &pair = QVector<QPair<QString, LabelingBoxList>>::operator[](i);
+            if (pair.first == key) {
+                return pair.second;
+            }
+        }
+
+        throw;
+    }
+
+private:
+};
+
 
 #endif // MARKINGBOXMANAGER_H

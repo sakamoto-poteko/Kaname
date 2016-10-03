@@ -80,6 +80,14 @@ Kaname::Kaname(QWidget *parent) :
         action->setToolTip(QString("%1 (%2)").arg(action->toolTip()).arg(action->shortcut().toString()));
     }
 
+
+    ObjectInfo unkobj;
+    unkobj.aspectRatioSet = false;
+    unkobj.objectColor = Qt::red;
+    unkobj.objectName = "unknown";
+    populateObjectSelectionButtons(QList<ObjectInfo>{ unkobj });
+
+    on_action_EditObjectNames_triggered();
 //    setButtonStatus(true);
 
 //    ObjectInfo oi, oj;
@@ -442,12 +450,7 @@ void Kaname::on_action_EditObjectNames_triggered()
     }
 
     QString selectedFilter;
-    QString filename = QFileDialog::getOpenFileName(this, tr("Save"),
-                                                #ifndef NDEBUG
-                                                    QString("H:/c83_enako"),
-                                                #else
-                                                    _lastDir,
-                                                #endif
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Objects Definition"), _lastDir,
                                                     supportedFormats.join(QByteArray::fromStdString(";;")),
                                                     &selectedFilter);
     if (filename.isEmpty())
@@ -459,6 +462,10 @@ void Kaname::on_action_EditObjectNames_triggered()
     }
 
     ObjectInfoList objInfoList = opener->open(filename);
+    if (objInfoList.isEmpty()) {
+        QMessageBox::critical(this, tr("Invalid object definition"), tr("The object definition is invalid. File corrupted?"));
+        return;
+    }
     populateObjectSelectionButtons(objInfoList);
 }
 
@@ -477,8 +484,6 @@ void Kaname::selectedNextObject()
         }
     }
 
-    int next = ++current;
-    if (next < _objSelectionButtons.size()) {
-        _objSelectionButtons.at(next)->click();
-    }
+    int next = ++current % _objSelectionButtons.size();
+    _objSelectionButtons.at(next)->click();
 }
