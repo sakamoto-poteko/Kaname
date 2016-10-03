@@ -79,6 +79,7 @@ private:
     void setButtonStatus(bool loaded);
     void clearImage();
     QPair<QString, LabelDataFormatInterface *> getSaver(const QString &caption);
+    void updateWindowTitle(const QString &imageName = QString());
 
     bool                        _autoSave;
     QString                     _autoSavePath;

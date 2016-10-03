@@ -49,6 +49,7 @@ Kaname::Kaname(QWidget *parent) :
     connect(ui->action_ClearImages, &QAction::triggered,    ui->leImageName,    &QLineEdit::clear);
     connect(ui->action_ClearImages, &QAction::triggered,    ui->leImageSize,    &QLineEdit::clear);
     connect(ui->action_ClearImages, &QAction::triggered,    ui->leNextObj,      &QLineEdit::clear);
+    connect(ui->action_ClearImages, &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::clear);
     connect(ui->action_ClearSelection,  &QAction::triggered,ui->labelingView,   &LabelingGraphicsView::clearSelection);
     connect(ui->action_MoveDown,    &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxDown);
     connect(ui->action_MoveUp,      &QAction::triggered,    ui->labelingView,   &LabelingGraphicsView::moveSelectedBoxUp);
@@ -172,6 +173,17 @@ QPair<QString, LabelDataFormatInterface *> Kaname::getSaver(const QString &capti
     ret.first = filename;
     ret.second = saver;
     return ret;
+}
+
+void Kaname::updateWindowTitle(const QString &imageName)
+{
+    QString title;
+    if (imageName.isEmpty())
+        title = tr("Kaname");
+    else {
+        title = QString(tr("Kaname - %1")).arg(imageName);
+    }
+    setWindowTitle(title);
 }
 
 void Kaname::imageLoadStatusChanged(bool loaded)
@@ -338,6 +350,8 @@ void Kaname::getAndRenderImage()
         _objSelectionButtons.first()->click();
     }
 
+    updateWindowTitle(shortname);
+
     if (img.isNull()) {
         updateTempStatusText(tr("Invalid image"), 5000);
     } else {
@@ -411,6 +425,8 @@ void Kaname::clearImage()
     _autoSave = false;
     _autoSavePath.clear();
     _autoSaveSaver = 0;
+
+    updateWindowTitle();
 }
 
 void Kaname::on_action_ClearImages_triggered()
