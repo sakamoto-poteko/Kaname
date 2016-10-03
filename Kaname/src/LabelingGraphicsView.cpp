@@ -213,9 +213,9 @@ void LabelingGraphicsView::mousePressEvent(QMouseEvent *event)
         if (pressedItem) {
             _dragState = CopyingBox;
             _currentBoxItem = pressedItem->clone(labelingScene()->nextId());
+            scene()->addItem(_currentBoxItem);
             _currentBoxItem->setCenter(mpos);
             _currentBoxItem->select();
-            scene()->addItem(_currentBoxItem);
             setCursor(Qt::DragCopyCursor);
             return;
         }
