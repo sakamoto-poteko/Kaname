@@ -297,13 +297,14 @@ void Kaname::on_action_AddImages_triggered()
                                                       "Images (*.bmp *.png *.xpm *.jpg *.jpeg "
                                                       "*.gif *.xbm *.ppm *.pbm);;All files (*.*)");
 
-    if (!files.isEmpty()) {
-        _lastDir = QFileInfo(files.first()).absoluteDir().absolutePath();
+    if (files.isEmpty())
+        return;
 
-        _imageSource->addSources(files);
-        updateTempStatusText(QString(tr("%1 files added.")).arg(files.size()), 2000);
-        _imageSource->load();
-    }
+    _lastDir = QFileInfo(files.first()).absoluteDir().absolutePath();
+
+    _imageSource->addSources(files);
+    updateTempStatusText(QString(tr("%1 files added.")).arg(files.size()), 2000);
+    _imageSource->load();
 
     auto s = getSaver(tr("Autosave file (Cancel to disable autosave)"));
     if (s.first.isEmpty() || !s.second)
@@ -359,10 +360,9 @@ void Kaname::getAndRenderImage()
     }
 }
 
-void Kaname::on_action_NextImage_triggered()
+bool Kaname::moveNext(bool autoSaveEnable)
 {
-    // Autosave
-    if (_autoSave) {
+    if (_autoSave && autoSaveEnable) {
         Q_ASSERT(!_autoSavePath.isEmpty());
         Q_ASSERT(_autoSaveSaver);
         Q_ASSERT(_boxManager);
@@ -377,9 +377,16 @@ void Kaname::on_action_NextImage_triggered()
 
     if (_imageSource->moveNext()) {
         getAndRenderImage();
+        return true;
     } else {
         updateTempStatusText(tr("This is the last image"), 5000);
+        return false;
     }
+}
+
+void Kaname::on_action_NextImage_triggered()
+{
+    moveNext();
 }
 
 void Kaname::on_action_PreviousImage_triggered()
@@ -486,6 +493,8 @@ void Kaname::on_action_Open_triggered()
         _autoSaveSaver = opener;
         updateTempStatusText(tr("Labeling data loaded."));
     }
+
+    skipToNextEmptyImge();
 }
 
 
@@ -544,4 +553,15 @@ void Kaname::selectedNextObject()
 
     int next = ++current % _objSelectionButtons.size();
     _objSelectionButtons.at(next)->click();
+}
+
+void Kaname::skipToNextEmptyImge()
+{
+    do {
+        QString shortname(QFileInfo(_imageSource->getImageName()).fileName());
+
+        if ((*_boxManager)[shortname].isEmpty()) {
+            break;
+        }
+    } while(moveNext(false));
 }

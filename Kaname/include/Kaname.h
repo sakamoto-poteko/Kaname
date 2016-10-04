@@ -61,6 +61,8 @@ private slots:
 
     void selectedNextObject();
 
+    void skipToNextEmptyImge();
+
 private:
     Ui::Kaname *ui;
     AbstractImageSource *_imageSource;
@@ -84,6 +86,7 @@ private:
     bool                        _autoSave;
     QString                     _autoSavePath;
     LabelDataFormatInterface    *_autoSaveSaver;
+    bool moveNext(bool autoSaveEnable = true);
 };
 
 #endif // KANAME_H
