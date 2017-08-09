@@ -557,11 +557,13 @@ void Kaname::selectedNextObject()
 
 void Kaname::skipToNextEmptyImge()
 {
+    _imageSource->moveEnd();
     do {
         QString shortname(QFileInfo(_imageSource->getImageName()).fileName());
 
-        if ((*_boxManager)[shortname].isEmpty()) {
+        if (!(*_boxManager)[shortname].isEmpty()) {
             break;
         }
-    } while(moveNext(false));
+    } while(_imageSource->movePrevious());
+    moveNext(false);
 }

@@ -24,6 +24,7 @@
 
 struct LabelingBox
 {
+    QSize   imageSize;
     QRectF  position;
     QColor  color;
     qreal   aspectRatio;

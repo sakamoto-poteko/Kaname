@@ -214,22 +214,22 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Save Labeling Data: Ctrl + S&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Open labeling Data: Ctrl + R&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Previous Image: A&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Next Image: D&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Previous Image: V&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Next Image: B&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Delete Selection: E&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Clear Selection: Esc&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Move Current Selection: Shift + W/A/S/D&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Select Next Object: C&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Move Current Selection: W/A/S/D&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Select Next Object: G&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom In: Ctrl + Z&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom Out: Ctrl + X&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom Reset: Ctrl + C&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zoom to Actual Pixels: Ctrl + V&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Horizontally: Shift+Q/E&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Vertically: Shift+Z/C&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Horizontally: Q/E&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Grow/Shrink Vertically: Z/C&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;-&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;About: ?&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
@@ -330,7 +330,7 @@ p, li { white-space: pre-wrap; }
     <string>Next Image</string>
    </property>
    <property name="shortcut">
-    <string>D</string>
+    <string>V</string>
    </property>
   </action>
   <action name="action_PreviousImage">
@@ -345,7 +345,7 @@ p, li { white-space: pre-wrap; }
     <string>Previous Image</string>
    </property>
    <property name="shortcut">
-    <string>A</string>
+    <string>B</string>
    </property>
   </action>
   <action name="action_NextObject">
@@ -359,9 +359,6 @@ p, li { white-space: pre-wrap; }
    <property name="toolTip">
     <string>Mark Next Object</string>
    </property>
-   <property name="shortcut">
-    <string>X</string>
-   </property>
   </action>
   <action name="action_UndoCurrentMark">
    <property name="icon">
@@ -373,9 +370,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>Remove Last Mark</string>
-   </property>
-   <property name="shortcut">
-    <string>Z</string>
    </property>
   </action>
   <action name="action_Save">
@@ -450,7 +444,7 @@ p, li { white-space: pre-wrap; }
     <string>Move Object Left</string>
    </property>
    <property name="shortcut">
-    <string>Shift+A</string>
+    <string>A</string>
    </property>
   </action>
   <action name="action_MoveRight">
@@ -465,7 +459,7 @@ p, li { white-space: pre-wrap; }
     <string>Move Object Right</string>
    </property>
    <property name="shortcut">
-    <string>Shift+D</string>
+    <string>D</string>
    </property>
   </action>
   <action name="action_MoveUp">
@@ -480,7 +474,7 @@ p, li { white-space: pre-wrap; }
     <string>Move Object Up</string>
    </property>
    <property name="shortcut">
-    <string>Shift+W</string>
+    <string>W</string>
    </property>
   </action>
   <action name="action_MoveDown">
@@ -495,7 +489,7 @@ p, li { white-space: pre-wrap; }
     <string>Move Object Down</string>
    </property>
    <property name="shortcut">
-    <string>Shift+S</string>
+    <string>S</string>
    </property>
   </action>
   <action name="action_SelectNextObject">
@@ -510,7 +504,7 @@ p, li { white-space: pre-wrap; }
     <string>Select Next Object</string>
    </property>
    <property name="shortcut">
-    <string>C</string>
+    <string>G</string>
    </property>
   </action>
   <action name="action_ZoomIn">
@@ -600,7 +594,7 @@ p, li { white-space: pre-wrap; }
     <string>Delete selected box</string>
    </property>
    <property name="shortcut">
-    <string>E</string>
+    <string>X</string>
    </property>
   </action>
   <action name="action_GrowHorizontally">
@@ -615,7 +609,7 @@ p, li { white-space: pre-wrap; }
     <string>Grow Horizontally</string>
    </property>
    <property name="shortcut">
-    <string>Shift+Q</string>
+    <string>Q</string>
    </property>
   </action>
   <action name="action_GrowVertically">
@@ -627,7 +621,7 @@ p, li { white-space: pre-wrap; }
     <string>Grow Vertically</string>
    </property>
    <property name="shortcut">
-    <string>Shift+Z</string>
+    <string>Z</string>
    </property>
   </action>
   <action name="action_ShrinkHorizontally">
@@ -642,7 +636,7 @@ p, li { white-space: pre-wrap; }
     <string>Shrink Horizontally</string>
    </property>
    <property name="shortcut">
-    <string>Shift+E</string>
+    <string>E</string>
    </property>
   </action>
   <action name="action_ShrinkVertically">
@@ -654,7 +648,7 @@ p, li { white-space: pre-wrap; }
     <string>Shrink Vertically</string>
    </property>
    <property name="shortcut">
-    <string>Shift+C</string>
+    <string>C</string>
    </property>
   </action>
  </widget>

@@ -61,7 +61,9 @@ void LabelingScene::syncToBoxManager()
 
     foreach (QGraphicsItem *item, items()) {
         GraphicsBoxItem *gi = static_cast<GraphicsBoxItem *>(item);
-        list.append(GraphicsBoxItem::toLabelingBox(gi));
+        auto box = GraphicsBoxItem::toLabelingBox(gi);
+        box.imageSize = _backgroundImage.size();
+        list.append(box);
     }
 
     (*_boxMan)[imgName()] = list;

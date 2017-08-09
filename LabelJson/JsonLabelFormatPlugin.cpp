@@ -168,7 +168,7 @@ bool JsonLabelForamtPlugin::open(const QString &openPath, BoxManager *boxman, co
 
 QString JsonLabelForamtPlugin::formatDescription()
 {
-    return "JSON format for labeling";
+    return "JSON format for annotating";
 }
 
 QString JsonLabelForamtPlugin::formatExtension()
@@ -183,7 +183,7 @@ QString JsonLabelForamtPlugin::formatName()
 
 QString JsonLabelForamtPlugin::name()
 {
-    return "Json Labeling Format";
+    return "Json Annotating Format";
 }
 
 QString JsonLabelForamtPlugin::version()
