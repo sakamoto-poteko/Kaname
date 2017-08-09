@@ -1,6 +1,6 @@
 # Kaname (千鳥 かなめ)
 
-Kaname is a labeling tool. Currently only image is supported. Video support is planned and comming soon.
+Kaname is a labeling & annotating tool. Currently only image is supported. Video support is planned and comming soon.
 
 At this time, to label a video, you'll need to use our `Ixtractor` tool converting video to images. 
 
