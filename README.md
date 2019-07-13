@@ -1,8 +1,8 @@
 # Kaname (千鳥 かなめ)
 
-Kaname is a labeling & annotating tool. Currently only image is supported. Video support is planned and comming soon.
+Kaname is a annotating tool. Currently only image is supported. Video support is planned and comming soon.
 
-At this time, to label a video, you'll need to use our `Ixtractor` tool converting video to images. 
+At this time, to annotate a video, you'll need to use our `Ixtractor` tool converting video to images. 
 
 ## Build
 This is a regular Qt subdir project. Execute `qmake` and build it with your favourite compiler.
@@ -15,10 +15,10 @@ This is a regular Qt subdir project. Execute `qmake` and build it with your favo
 ## Subdirs
 
 ### Kaname
-This is the core labeling application.
+This is the core annotating application.
 
 ### LabelJson
-This is a labeling data format plugin.
+This is a annotating data format plugin.
 
 ### ObjJson
 This is a object definition format plugin.
