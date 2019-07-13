@@ -18,34 +18,16 @@ This is a regular Qt subdir project. Execute `qmake` and build it with your favo
 This is the core annotating application.
 
 ### LabelJson
-This is a annotating data format plugin.
+This is an annotating data format plugin.
 
 ### ObjJson
-This is a object definition format plugin.
+This is an object definition format plugin.
 
 ## Use of plugins
 Copy plugins to the app exe folder. The app will automatically load these plugins when starts.
 
 ## License
-It seems that GPLv3 is the only choice. To be honest, I dislike this license. The reason is that I'm statically linking with Qt lib, 
-and, for the future video support, ffmpeg prebuild under Windows I'm using is released under GPLv3.
-
-```
-Copyright (C) 2016  Afa.L Cheng <afa@afa.moe>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-```
+Licensed under MIT now
 
 ## Kaname
 ![千鳥 かなめ](Kaname.png)
