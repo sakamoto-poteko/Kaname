@@ -4,6 +4,7 @@ SUBDIRS += \
     LabelJson \
     Kaname \
     ObjJson \
-    LabelTxt
+    LabelTxt \
+    LabelYOLO
 
 OTHER_FILES += README.md

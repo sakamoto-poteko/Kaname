@@ -19,20 +19,23 @@
 #ifndef MARKINGBOXMANAGER_H
 #define MARKINGBOXMANAGER_H
 
+#include <tuple>
+
 #include <QHash>
 #include <QVector>
 #include "LabelingBox.h"
 
 typedef QList<LabelingBox> LabelingBoxList;
+typedef std::tuple<QString, LabelingBoxList, QSize> Filename_LabelingBoxListImage_ImageSizeTuple;
 
-class BoxManager : public QVector<QPair<QString, LabelingBoxList>>
+class BoxManager : public QVector<Filename_LabelingBoxListImage_ImageSizeTuple>
 {
 public:
     QList<QString> keys() const
     {
         QList<QString> ret;
         for (auto pair : *this) {
-            ret.append(pair.first);
+            ret.append(std::get<0>(pair));
         }
 
         return ret;
@@ -41,22 +44,49 @@ public:
     LabelingBoxList &operator[](const QString &key)
     {
         for (int i = 0; i < size(); ++i) {
-            QPair<QString, LabelingBoxList> &pair = QVector<QPair<QString, LabelingBoxList>>::operator[](i);
-            if (pair.first == key) {
-                return pair.second;
+            Filename_LabelingBoxListImage_ImageSizeTuple &pair = QVector<Filename_LabelingBoxListImage_ImageSizeTuple>::operator[](i);
+            if (std::get<0>(pair) == key) {
+                return std::get<1>(pair);
             }
         }
 
-        append(QPair<QString, LabelingBoxList>(key, LabelingBoxList()));
-        return last().second;
+        append(Filename_LabelingBoxListImage_ImageSizeTuple(key, LabelingBoxList(), QSize()));
+        return std::get<1>(last());
     }
 
     LabelingBoxList const& operator[](const QString &key) const
     {
         for (int i = 0; i < size(); ++i) {
-            const QPair<QString, LabelingBoxList> &pair = QVector<QPair<QString, LabelingBoxList>>::operator[](i);
-            if (pair.first == key) {
-                return pair.second;
+            const Filename_LabelingBoxListImage_ImageSizeTuple &pair = QVector<Filename_LabelingBoxListImage_ImageSizeTuple>::operator[](i);
+            if (std::get<0>(pair) == key) {
+                return std::get<1>(pair);
+            }
+        }
+
+        throw;
+    }
+
+    void setImageSize(const QString &key, const QSize &imgSize)
+    {
+        for (int i = 0; i < size(); ++i) {
+            Filename_LabelingBoxListImage_ImageSizeTuple &pair = QVector<Filename_LabelingBoxListImage_ImageSizeTuple>::operator[](i);
+            auto pairKey = std::get<0>(pair);
+            if (pairKey == key) {
+                std::get<2>(pair) = imgSize;
+                return;
+            }
+        }
+
+        throw;
+    }
+
+
+    const QSize &getImageSize(const QString &key) const
+    {
+        for (int i = 0; i < size(); ++i) {
+            const Filename_LabelingBoxListImage_ImageSizeTuple &pair = QVector<Filename_LabelingBoxListImage_ImageSizeTuple>::operator[](i);
+            if (std::get<0>(pair) == key) {
+                return std::get<2>(pair);
             }
         }
 

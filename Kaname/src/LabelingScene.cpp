@@ -21,8 +21,8 @@
 #include "LabelingScene.h"
 #include "GraphicsBoxItem.h"
 
-LabelingScene::LabelingScene(const QImage &image, const QString &imgName, BoxManager *boxMan, QObject *parent):
-    QGraphicsScene(parent), _imgName(imgName), _boxMan(boxMan)
+LabelingScene::LabelingScene(const QImage &image, const QString &imgName, const QSize &imgSize, BoxManager *boxMan, QObject *parent):
+    QGraphicsScene(parent), _imgName(imgName), _imgSize(imgSize), _boxMan(boxMan)
 {
     setBackgroundImage(image);
     syncFromBoxManager();
@@ -67,6 +67,7 @@ void LabelingScene::syncToBoxManager()
     }
 
     (*_boxMan)[imgName()] = list;
+    _boxMan->setImageSize(imgName(), imgSize());
 }
 
 void LabelingScene::syncFromBoxManager()
@@ -86,6 +87,10 @@ void LabelingScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->drawImage(rect, _backgroundImage, rect);
 }
+
+
+
+
 
 uint32_t LabelingScene::_nextId = 0;
 

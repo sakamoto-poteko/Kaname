@@ -28,7 +28,7 @@ class GraphicsBoxItem;
 class LabelingScene : public QGraphicsScene
 {
 public:
-    LabelingScene(const QImage &image, const QString &imgName, BoxManager *boxMan, QObject *parent = Q_NULLPTR);
+    LabelingScene(const QImage &image, const QString &imgName, const QSize &imgSize, BoxManager *boxMan, QObject *parent = Q_NULLPTR);
     ~LabelingScene();
 
     void setBackgroundImage(const QImage &image)
@@ -66,6 +66,16 @@ public:
     QList<GraphicsBoxItem *> boxItems();
     uint32_t nextId();
 
+    QSize imgSize() const
+    {
+        return _imgSize;
+    }
+
+    void setImgSize(const QSize &imgSize)
+    {
+        _imgSize = imgSize;
+    }
+
 public slots:
     void syncToBoxManager();
     void syncFromBoxManager();
@@ -77,6 +87,7 @@ protected:
 
     QImage _backgroundImage;
     QString _imgName;
+    QSize _imgSize;
     BoxManager *_boxMan;
     static uint32_t _nextId;
 };

@@ -334,7 +334,7 @@ void Kaname::getAndRenderImage()
     ui->labelingView->clear();
     if (_labelingScene)
         delete _labelingScene;
-    _labelingScene = new LabelingScene(img, shortname, _boxManager, this);
+    _labelingScene = new LabelingScene(img, shortname, img.size(), _boxManager, this);
     ui->labelingView->setScene(_labelingScene);
 
     if (_imgTransformationMap.contains(shortname))
