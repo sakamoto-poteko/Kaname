@@ -73,15 +73,15 @@ bool YoloLabelFormatPlugin::save(const BoxManager &boxes, const QString &savePat
             }
 
             auto x = center.x() / imgSize.width();
-            auto y = center.y() / imgSize.height();
             auto width = rect.width() / imgSize.width();
+            auto y = center.y() / imgSize.height();
             auto height = rect.height() / imgSize.height();
 
             auto str = QString("%1 %2 %3 %4 %5")
                     .arg(objId)
                     .arg(x)
-                    .arg(width)
                     .arg(y)
+                    .arg(width)
                     .arg(height);
 
             QTextStream stream(&imgtxt);
